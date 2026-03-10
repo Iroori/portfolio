@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SK하이닉스 SeedVDI 신규 구축 프로젝트</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-2: #3a3a3a;
+      --ink-3: #6a6a6a;
+      --ink-4: #9a9a9a;
+      --rule: #e4e4e4;
+      --rule-2: #f0f0f0;
+      --surface: #f6f6f4;
+      --surface-2: #f0efec;
+      --white: #ffffff;
+
+      --green: #2d6a4f;
+      --green-bg: #edf7f2;
+      --green-border: #b7dfc9;
+
+      --blue: #1d4e8a;
+      --blue-bg: #eef4fb;
+      --blue-border: #b3cde8;
+
+      --violet: #4a3880;
+      --violet-bg: #f0edfb;
+      --violet-border: #c9bfee;
+
+      --amber: #7a4f10;
+      --amber-bg: #fdf5e6;
+      --amber-border: #e8cfa0;
+
+      --red: #8b2020;
+      --red-bg: #fdf0f0;
+      --red-border: #e8b0b0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--ink);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fu {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    .d1 {
+      animation-delay: .05s;
+    }
+
+    .d2 {
+      animation-delay: .12s;
+    }
+
+    .d3 {
+      animation-delay: .19s;
+    }
+
+    .d4 {
+      animation-delay: .26s;
+    }
+
+    .d5 {
+      animation-delay: .33s;
+    }
+
+    .d6 {
+      animation-delay: .40s;
+    }
+
+    .d7 {
+      animation-delay: .47s;
+    }
+
+    .d8 {
+      animation-delay: .54s;
+    }
+
+    /* ── LAYOUT ── */
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ── SITE HEADER ── */
+    .site-header {
+      padding: 72px 0 52px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .header-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 10px;
+    }
+
+    .header-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .header-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(26px, 4.5vw, 42px);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      line-height: 1.22;
+      margin-bottom: 18px;
+    }
+
+    .header-desc {
+      font-size: 14.5px;
+      color: var(--ink-3);
+      max-width: 580px;
+      line-height: 1.9;
+    }
+
+    .header-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 24px;
+    }
+
+    /* ── PROJECT META BAR ── */
+    .meta-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 32px 0 0;
+    }
+
+    .meta-item {
+      padding: 16px 20px;
+      border-right: 1px solid var(--rule);
+    }
+
+    .meta-item:last-child {
+      border-right: none;
+    }
+
+    .meta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 5px;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      padding: 60px 0 0;
+    }
+
+    .sec-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: .1em;
+      margin-bottom: 5px;
+    }
+
+    .sec-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      margin-bottom: 5px;
+    }
+
+    .sec-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: .06em;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 28px;
+    }
+
+    /* ── MODULE LABEL (큰 섹션 구분용) ── */
+    .module-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 22px;
+    }
+
+    .ml-blue {
+      background: var(--blue-bg);
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+    }
+
+    .ml-violet {
+      background: var(--violet-bg);
+      color: var(--violet);
+      border: 1px solid var(--violet-border);
+    }
+
+    .ml-green {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+
+    /* ── PURPOSE BOX ── */
+    .purpose-box {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 8px;
+    }
+
+    .purpose-text {
+      font-size: 14px;
+      color: var(--ink-2);
+      line-height: 1.9;
+    }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--ink-2);
+    }
+
+    /* ── TAGS ── */
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      border: 1px solid;
+      letter-spacing: .03em;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .tag-default {
+      border-color: var(--rule);
+      color: var(--ink-3);
+      background: var(--surface);
+    }
+
+    .tag-green {
+      border-color: var(--green-border);
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .tag-blue {
+      border-color: var(--blue-border);
+      color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .tag-violet {
+      border-color: var(--violet-border);
+      color: var(--violet);
+      background: var(--violet-bg);
+    }
+
+    .tag-amber {
+      border-color: var(--amber-border);
+      color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--rule);
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .tl-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -25px;
+      top: 7px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 1.5px solid var(--ink-4);
+    }
+
+    .tl-dot.blue {
+      border-color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .tl-dot.green {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .tl-dot.violet {
+      border-color: var(--violet);
+      background: var(--violet-bg);
+    }
+
+    .tl-dot.amber {
+      border-color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    .tl-phase {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 3px;
+    }
+
+    .tl-phase.blue {
+      color: var(--blue);
+    }
+
+    .tl-phase.green {
+      color: var(--green);
+    }
+
+    .tl-phase.violet {
+      color: var(--violet);
+    }
+
+    .tl-phase.amber {
+      color: var(--amber);
+    }
+
+    .tl-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .tl-desc {
+      font-size: 13.5px;
+      color: var(--ink-3);
+      line-height: 1.85;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      background: var(--white);
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    .card:hover {
+      border-color: #d0d0d0;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .card-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 17px;
+      margin-top: 1px;
+    }
+
+    .ci-green {
+      background: var(--green-bg);
+    }
+
+    .ci-blue {
+      background: var(--blue-bg);
+    }
+
+    .ci-violet {
+      background: var(--violet-bg);
+    }
+
+    .ci-amber {
+      background: var(--amber-bg);
+    }
+
+    .ci-red {
+      background: var(--red-bg);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 5px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.85;
+    }
+
+    .card.warn {
+      border-color: var(--amber-border);
+      background: var(--amber-bg);
+    }
+
+    .card.ok {
+      border-color: var(--green-border);
+      background: var(--green-bg);
+    }
+
+    /* ── KP GRID ── */
+    .kp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .kp-box {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 18px 20px;
+      background: var(--white);
+    }
+
+    .kp-icon {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .kp-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 4px;
+    }
+
+    .kp-value {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      margin-bottom: 5px;
+    }
+
+    .kp-desc {
+      font-size: 12px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+
+    /* ── TWO-COL ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ── FLOW MINI ── */
+    .flow-mini {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 18px 0;
+    }
+
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+
+    .flow-step {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 5px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--rule);
+      background: var(--white);
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+
+    .flow-arrow {
+      font-size: 13px;
+      color: var(--ink-4);
+      margin: 0 6px;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .hl-box {
+      border-left: 2.5px solid var(--ink-3);
+      padding: 13px 18px;
+      margin: 16px 0;
+      background: var(--surface);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .hl-box.blue {
+      border-color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .hl-box.green {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .hl-box.amber {
+      border-color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    .hl-box.violet {
+      border-color: var(--violet);
+      background: var(--violet-bg);
+    }
+
+    .hl-box p {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.85;
+    }
+
+    /* ── SEQUENCE DIAGRAM (RSA+AES) ── */
+    .seq-wrap {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .seq-actors {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .seq-actor {
+      padding: 14px 20px;
+      text-align: center;
+    }
+
+    .seq-actor:first-child {
+      border-right: 1px solid var(--rule);
+    }
+
+    .seq-actor-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: .04em;
+    }
+
+    .seq-actor-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-4);
+      margin-top: 3px;
+      letter-spacing: .04em;
+    }
+
+    .seq-body {
+      padding: 8px 0;
+    }
+
+    .seq-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      min-height: 100px;
+    }
+
+    .seq-row+.seq-row {
+      border-top: 1px solid var(--rule-2);
+    }
+
+    .seq-step-num {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+
+    /* lifelines */
+    .seq-row::before,
+    .seq-row::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: repeating-linear-gradient(to bottom, var(--rule) 0, var(--rule) 5px, transparent 5px, transparent 10px);
+      z-index: 0;
+    }
+
+    .seq-row::before {
+      left: 25%;
+    }
+
+    .seq-row::after {
+      right: 25%;
+    }
+
+    .seq-arrow-wrap {
+      position: absolute;
+      left: 25%;
+      right: 25%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .seq-line {
+      flex: 1;
+      height: 1.5px;
+    }
+
+    .seq-line-r {
+      background: linear-gradient(90deg, var(--blue), rgba(29, 78, 138, .2));
+    }
+
+    .seq-line-l {
+      background: linear-gradient(90deg, rgba(74, 56, 128, .2), var(--violet));
+    }
+
+    .seq-line-g {
+      background: linear-gradient(90deg, var(--green), rgba(45, 106, 79, .2));
+    }
+
+    .seq-line-gr {
+      background: linear-gradient(90deg, rgba(45, 106, 79, .2), var(--green));
+    }
+
+    .seq-head-r {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--blue);
+    }
+
+    .seq-head-l {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 8px solid var(--violet);
+    }
+
+    .seq-head-g {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--green);
+    }
+
+    .seq-head-gr {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 8px solid var(--green);
+    }
+
+    .seq-msg {
+      position: absolute;
+      left: 25%;
+      right: 25%;
+      top: calc(50% - 26px);
+      text-align: center;
+      z-index: 3;
+    }
+
+    .seq-msg-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-block;
+      background: var(--white);
+      padding: 2px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--rule);
+      color: var(--ink-2);
+    }
+
+    .seq-msg-sub {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--ink-4);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* dots on lifelines */
+    .seq-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
+
+    .sd-l {
+      left: 25%;
+    }
+
+    .sd-r {
+      right: 25%;
+      transform: translate(50%, -50%);
+    }
+
+    .sd-blue {
+      background: var(--blue);
+      border: 2px solid var(--white);
+    }
+
+    .sd-violet {
+      background: var(--violet);
+      border: 2px solid var(--white);
+    }
+
+    .sd-green {
+      background: var(--green);
+      border: 2px solid var(--white);
+    }
+
+    /* ── NOTE ASIDE ── */
+    .note-aside {
+      position: absolute;
+      z-index: 3;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      max-width: 160px;
+      line-height: 1.55;
+    }
+
+    .na-left {
+      left: 2%;
+      top: 30px;
+      text-align: left;
+    }
+
+    .na-right {
+      right: 2%;
+      top: 30px;
+      text-align: right;
+    }
+
+    .na-blue {
+      background: var(--blue-bg);
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+    }
+
+    .na-violet {
+      background: var(--violet-bg);
+      color: var(--violet);
+      border: 1px solid var(--violet-border);
+    }
+
+    .na-green {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .module-divider {
+      border: none;
+      border-top: 1.5px solid var(--rule-2);
+      margin: 48px 0 0;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      padding: 36px 0 60px;
+      border-top: 1px solid var(--rule);
+      margin-top: 60px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: .06em;
+    }
+
+    .footer-tags {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* responsive */
+    @media(max-width:620px) {
+      .wrap {
+        padding: 0 20px;
+      }
+
+      .kp-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .meta-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .meta-item {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .meta-item:last-child {
+        border-bottom: none;
+      }
+
+      .flow-steps {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .flow-arrow {
+        transform: rotate(90deg);
+        margin: 3px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ SITE HEADER ══ -->
+  <header class="site-header">
+    <div class="wrap">
+      <p class="header-eyebrow fu d1">Portfolio · Project</p>
+      <p class="header-kicker fu d2">SK하이닉스 SeedVDI 신규 구축 프로젝트</p>
+      <h1 class="header-title fu d3">
+        VM 배치 수집 · 보안 통신<br>· 외부 결재 모듈 연동
+      </h1>
+      <p class="header-desc fu d4">
+        Horizon REST API 기반 대규모 VM 상태 수집 배치,
+        C# Launcher–Java 서버 간 RSA+AES 하이브리드 암호화 보안 채널,
+        그리고 VM 신청(생성/증설/연장)과 사내 결재망(SOAP·REST API) 통합 연동
+        기능을 담당했다.
+      </p>
+      <div class="header-tags fu d5">
+        <span class="tag tag-default">C# / .NET</span>
+        <span class="tag tag-default">Java</span>
+        <span class="tag tag-blue">Spring Boot</span>
+        <span class="tag tag-blue">React</span>
+        <span class="tag tag-blue">Node.js</span>
+        <span class="tag tag-blue">Horizon REST API</span>
+        <span class="tag tag-violet">JPA</span>
+        <span class="tag tag-violet">MSSQL</span>
+        <span class="tag tag-violet">RSA + AES</span>
+        <span class="tag tag-amber">Jenkins</span>
+        <span class="tag tag-amber">Git</span>
+        <span class="tag tag-default">Windows Scheduler</span>
+      </div>
+
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════
+     PART A — VM 상태 수집 배치 시스템
+═══════════════════════════════════════════ -->
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-num fu d1">01</div>
+        <h2 class="sec-title fu d2">VM 상태 수집 배치 시스템</h2>
+        <p class="sec-sub fu d3">VM STATUS BATCH COLLECTION · HORIZON REST API</p>
+
+        <!-- 배경 -->
+        <div class="two-col fu d5">
+          <div class="card warn">
+            <div class="card-icon ci-amber">⚠</div>
+            <div class="card-body">
+              <div class="card-title">기존 방식의 한계</div>
+              <div class="card-desc">
+                Event DB 폴링 방식으로 실시간 상태 반영 지연.
+                이벤트 누락 시 상태 불일치 발생.
+                ~25,000대 VM을 커버하기에 구조적으로 부적합.
+              </div>
+            </div>
+          </div>
+          <div class="card ok">
+            <div class="card-icon ci-green">✓</div>
+            <div class="card-body">
+              <div class="card-title">개선 방향</div>
+              <div class="card-desc">
+                Horizon REST API 직접 호출로 전환.
+                병렬 처리 구조로 수집 시간 최소화.
+                배치 주기 10 ~ 15분내외 목표 (실측 후 확정).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 수집 흐름 -->
+        <div class="flow-mini fu d6">
+          <div class="eyebrow" style="margin-bottom:12px">수집 흐름 요약</div>
+          <div class="flow-steps">
+            <span class="flow-step">Windows Scheduler</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">DB Horizon 조회</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">수집 대상 필터</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">병렬 API 수집</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">별도 테이블 UPSERT</span>
+          </div>
+        </div>
+
+        <!-- 타임라인 -->
+        <div class="timeline fu d7">
+
+          <div class="tl-item">
+            <div class="tl-dot blue"></div>
+            <div class="tl-phase blue">Step 01 — Trigger</div>
+            <div class="tl-title">Windows Task Scheduler 배치 기동</div>
+            <div class="tl-desc">
+              배치 목표 주기는 <strong>10 ~ 15분내외</strong>. API 응답 속도와 DB 처리 시간을 실측한 뒤 최종 확정.
+              전체 수집 대상 VM은 약 <strong>25,000대</strong>이며, 가장 규모가 큰 단일 호라이즌에 약 12,000대가 수용된다.
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot amber"></div>
+            <div class="tl-phase amber">Step 02 — Target Selection</div>
+            <div class="tl-title">수집 대상 Horizon 동적 조회 (이중화 제어)</div>
+            <div class="tl-desc">
+              배치 시작 시 DB Horizon 테이블에서
+              <code>collect_yn = 'Y'</code>인 행만 조회해 수집 대상을 구성한다.
+              이중화 구성 호라이즌 서버는은 Standby를 <code>'N'</code>으로 설정해
+              중복 수집을 방지하며, DB 컬럼 값 변경만으로 수집 대상을 즉시 전환할 수 있다.
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot violet"></div>
+            <div class="tl-phase violet">Step 03 — API Strategy</div>
+            <div class="tl-title">Horizon REST API 조회 전략 결정</div>
+            <div class="tl-desc">
+              포탈 조회 API를 참고하여 <strong>Pool 단위 필터 파라미터 지원 여부</strong>를 사전 확인한다.
+              필터 지원 시에는 Pool별 분할 병렬 조회로 성능을 최적화하고,
+              미지원 시에는 호라이즌 단위 전체 일괄 조회 후 메모리 내 처리한다.
+              현장 담당자에게 <strong>필터 적용 vs 전체 조회 응답 시간 비교 측정을 요청</strong>해 전략을 확정한다.
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-phase green">Step 04 — Parallel Collection</div>
+            <div class="tl-title">호라이즌별 독립 스레드 병렬 수집</div>
+            <div class="tl-desc">
+              수집 대상 각 Horizon에 독립 스레드를 할당해 병렬로 API를 호출한다.
+              API가 Pool 필터를 지원하면 호라이즌 내에서도 Pool 단위로 서브 태스크를 추가 분할해
+              병렬화 효과를 극대화한다.
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-phase green">Step 05 — DB Write</div>
+            <div class="tl-title">별도 VM 상태 테이블에 UPSERT · NOLOCK 적용</div>
+            <div class="tl-desc">
+              수집 결과를 기존 운영 테이블이 아닌 배치 전용 별도 상태 테이블에 UPSERT한다.
+              10 ~ 15분내외마다 지속 업데이트되므로 기존 테이블에 직접 쓰면 SELECT와의 Lock 경합이 발생한다.
+              포탈·Trinity의 View, Procedure, Query에서 이 테이블을 JOIN할 때는
+              <code>WITH (NOLOCK)</code>을 일괄 적용해 Dirty Read를 허용하고 Lock을 우회한다.
+            </div>
+          </div>
+        </div>
+
+        <!-- 설계도 이미지 -->
+        <div class="fu d8" style="margin-top:36px;">
+          <div class="eyebrow" style="margin-bottom:12px">설계도</div>
+          <div style="border:1px solid var(--rule); border-radius:12px; overflow:hidden; background:var(--surface);">
+            <img src="img/batch.png" alt="VM 상태 수집 배치 시스템 설계도"
+              style="width:100%; display:block; border-radius:12px 12px 0 0;">
+            <div style="padding:10px 16px; border-top:1px solid var(--rule);">
+              <span
+                style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-4); letter-spacing:.04em;">
+                VM 상태 수집 배치 시스템 — 구현 설계도
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 핵심 설계 카드 -->
+        <hr class="module-divider" style="margin-top:36px;">
+        <div style="margin-top:28px;">
+          <div class="eyebrow fu d1" style="margin-bottom:16px">핵심 설계 결정</div>
+
+          <div class="card fu d2">
+            <div class="card-icon ci-amber">🔀</div>
+            <div class="card-body">
+              <div class="card-title">이중화 호라이즌 수집 제어</div>
+              <div class="card-desc">
+                Horizon 테이블에 <code>collect_yn CHAR(1)</code> 컬럼을 추가.
+                배치는 <code>'Y'</code>인 서버만 대상으로 삼아 이중화 구성의 중복 수집을 방지.
+                운영 중 이중화 전환 시에도 DB 값 변경만으로 즉시 대상을 교체할 수 있어 유연하다.
+              </div>
+            </div>
+          </div>
+
+          <div class="card fu d3">
+            <div class="card-icon ci-red">🔒</div>
+            <div class="card-body">
+              <div class="card-title">DB Table Lock 분리</div>
+              <div class="card-desc">
+                배치 전용 VM 상태 테이블(<code>vm_status_batch</code>)을 별도 생성해 Lock을 분리.
+                포탈·Trinity 조회 프로시저는 해당 테이블 JOIN 시
+                <code>WITH (NOLOCK)</code>을 적용. 기존 프로시저의 NOLOCK 패턴을 참고해 동일하게 작성.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 기술 스택 -->
+        <div class="kp-grid fu d4" style="margin-top:28px;">
+          <div class="kp-box">
+            <div class="kp-icon">🖥</div>
+            <div class="kp-label">수집 대상</div>
+            <div class="kp-value">~25,000</div>
+            <div class="kp-desc">전체 VM 규모.<br>최대 단일 호라이즌 ~12,000대.</div>
+          </div>
+          <div class="kp-box">
+            <div class="kp-icon">⏱</div>
+            <div class="kp-label">배치 주기</div>
+            <div class="kp-value">10 ~ 15분내외 목표</div>
+          </div>
+          <div class="kp-box">
+            <div class="kp-icon">⚡</div>
+            <div class="kp-label">처리 방식</div>
+            <div class="kp-value">병렬 스레드</div>
+            <div class="kp-desc">호라이즌별 독립 스레드.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+     PART B — RSA+AES 하이브리드 보안 모듈
+═══════════════════════════════════════════ -->
+    <section class="section" style="padding-top:72px;">
+      <div class="wrap">
+        <div class="sec-num fu d1">02</div>
+        <h2 class="sec-title fu d2">JWT · RSA+AES 하이브리드 보안 통신 모듈</h2>
+        <p class="sec-sub fu d3">JWT LAUNCH TRIGGER · RSA KEY EXCHANGE · AES-256 ENCRYPTION PROTOCOL</p>
+
+        <div class="purpose-box fu d5">
+          <div class="eyebrow">설계 목적</div>
+          <p class="purpose-text">
+            웹 서버가 JWT를 통해 C# Launcher를 안전하게 기동하고,
+            Launcher가 일회용 RSA 키쌍을 생성해 콜백 요청에 공개키를 포함하여 전송한다.
+            서버는 JWT를 검증한 뒤 VM 접속 정보를 <strong>AES-256으로 암호화</strong>하고,
+            AES 키는 Launcher의 <strong>RSA 공개키로 Key Wrapping</strong>하여 응답한다.
+            Launcher는 자신의 RSA 개인키로 AES 키를 복호화한 후 VM 데이터를 복호화해 접속을 수행한다.
+          </p>
+        </div>
+
+        <!-- Sequence Diagram — Full Protocol -->
+        <div class="seq-wrap fu d6">
+
+          <!-- Actors — 한 번만 표시 -->
+          <div class="seq-actors">
+            <div class="seq-actor">
+              <div class="seq-actor-name">🌐 Web Server</div>
+              <div class="seq-actor-sub">Java Tomcat</div>
+            </div>
+            <div class="seq-actor">
+              <div class="seq-actor-name">💻 C# Launcher</div>
+              <div class="seq-actor-sub">.NET App</div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="seq-body">
+
+            <!-- ── Phase 1 배너 ── -->
+            <div
+              style="grid-column:1/-1; padding:6px 14px; background:var(--blue-bg); border-bottom:1px solid var(--blue-border); border-top:1px solid var(--blue-border);">
+              <span
+                style="font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--blue);">Phase
+                1 · Launch Trigger</span>
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 01</div>
+              <div class="note-aside na-left na-blue">callbackUrl 포함<br>JWT 생성<br>(서버 내부)</div>
+              <div class="seq-arrow-wrap">
+              </div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">📝 JWT 생성 (callbackUrl 포함)</span>
+                <span class="seq-msg-sub">payload: { callbackUrl, exp, sub, ... }</span>
+              </div>
+              <div class="seq-dot sd-l sd-blue"></div>
+              <div class="seq-dot sd-r sd-blue"></div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 02</div>
+              <div class="note-aside na-left na-violet">.slv 파일 또는<br>커스텀 프로토콜로<br>JWT 전달 &amp; 런처 실행</div>
+              <div class="seq-arrow-wrap">
+                <div class="seq-line seq-line-r"></div>
+                <div class="seq-head-r"></div>
+              </div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🚀 런처 실행 + JWT 전달</span>
+                <span class="seq-msg-sub">.slv 파일 / 커스텀 프로토콜로 런처 기동</span>
+              </div>
+              <div class="seq-dot sd-l sd-violet"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 03</div>
+              <div class="note-aside na-right na-violet">JWT 디코딩<br>callbackUrl 추출<br>(런처 내부)</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🔍 JWT 디코딩 → callbackUrl 추출</span>
+                <span class="seq-msg-sub">런처 내부 처리 — 네트워크 통신 없음</span>
+              </div>
+              <div class="seq-dot sd-l sd-violet"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- ── Phase 2 배너 ── -->
+            <div
+              style="grid-column:1/-1; padding:6px 14px; background:var(--violet-bg); border-bottom:1px solid var(--violet-border); border-top:1px solid var(--violet-border); margin-top:2px;">
+              <span
+                style="font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--violet);">Phase
+                2 · Callback &amp; Key Exchange</span>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 04</div>
+              <div class="note-aside na-right na-violet">일회용 RSA<br>공개키/개인키 쌍<br>생성 (런처 내부)</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🔑 일회용 RSA 키쌍 생성</span>
+                <span class="seq-msg-sub">런처 내부 처리 — 세션마다 새로운 키쌍 생성</span>
+              </div>
+              <div class="seq-dot sd-l sd-violet"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- STEP 5 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 05</div>
+              <div class="note-aside na-right na-blue">Header: JWT +<br>RSA Public Key<br>포함하여 전송</div>
+              <div class="seq-arrow-wrap">
+                <div class="seq-head-l"></div>
+                <div class="seq-line seq-line-l"></div>
+              </div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">📤 callbackUrl 호출 (JWT + RSA 공개키)</span>
+                <span class="seq-msg-sub">Header: Authorization: Bearer &lt;JWT&gt;, X-RSA-PublicKey:
+                  &lt;pubkey&gt;</span>
+              </div>
+              <div class="seq-dot sd-l sd-blue"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- ── Phase 3 배너 ── -->
+            <div
+              style="grid-column:1/-1; padding:6px 14px; background:var(--green-bg); border-bottom:1px solid var(--green-border); border-top:1px solid var(--green-border); margin-top:2px;">
+              <span
+                style="font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--green);">Phase
+                3 · Server-side Processing</span>
+            </div>
+
+            <!-- STEP 6 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 06</div>
+              <div class="note-aside na-left na-blue">서명/만료/인증<br>3중 JWT 검증<br>(서버 내부)</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🛡 JWT 검증 (서명 · 만료 · 인증)</span>
+                <span class="seq-msg-sub">검증 실패 시 401 Unauthorized 응답 반환</span>
+              </div>
+              <div class="seq-dot sd-l sd-blue"></div>
+              <div class="seq-dot sd-r sd-blue"></div>
+            </div>
+
+            <!-- STEP 7 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 07</div>
+              <div class="note-aside na-left na-green">검증 통과 후<br>AES-256 랜덤<br>대칭키 생성</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🎲 AES-256 랜덤 대칭키 생성</span>
+                <span class="seq-msg-sub">요청마다 새로운 AES 세션키 생성 — 재사용 없음</span>
+              </div>
+              <div class="seq-dot sd-l sd-green"></div>
+              <div class="seq-dot sd-r sd-green"></div>
+            </div>
+
+            <!-- STEP 8 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 08</div>
+              <div class="note-aside na-left na-green">VM 접속 정보 +<br>프로세스 체크 정보<br>AES 암호화</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🔐 VM 데이터 AES-256 암호화</span>
+                <span class="seq-msg-sub">{ vmHost, vmPort, credentials, processCheck } → AES Ciphertext</span>
+              </div>
+              <div class="seq-dot sd-l sd-green"></div>
+              <div class="seq-dot sd-r sd-green"></div>
+            </div>
+
+            <!-- STEP 9 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 09</div>
+              <div class="note-aside na-left na-violet">런처 RSA 공개키로<br>AES 키를<br>Key Wrapping</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🔒 AES Key → RSA-OAEP Key Wrapping</span>
+                <span class="seq-msg-sub">런처의 RSA Public Key로 AES 키 암호화 → 도청 불가</span>
+              </div>
+              <div class="seq-dot sd-l sd-violet"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- ── Phase 4 배너 ── -->
+            <div
+              style="grid-column:1/-1; padding:6px 14px; background:var(--surface); border-bottom:1px solid var(--rule); border-top:1px solid var(--rule); margin-top:2px;">
+              <span
+                style="font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3);">Phase
+                4 · Response &amp; Decrypt</span>
+            </div>
+
+            <!-- STEP 10 -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 10</div>
+              <div class="note-aside na-left na-blue">Header: 암호화된<br>AES 키 (RSA-OAEP)<br>Body: AES 암호문</div>
+              <div class="seq-arrow-wrap">
+                <div class="seq-line seq-line-r"></div>
+                <div class="seq-head-r"></div>
+              </div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">📩 응답: Header(AES Key) + Body(AES Ciphertext)</span>
+                <span class="seq-msg-sub">X-Encrypted-Key: RSA-OAEP(AES Key) · Body: AES-256(JSON Data)</span>
+              </div>
+              <div class="seq-dot sd-l sd-blue"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- STEP 11a -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 11-①</div>
+              <div class="note-aside na-right na-violet">RSA 개인키로<br>AES 키 복호화<br>(런처 내부)</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🔓 ① RSA 개인키로 AES 키 복호화</span>
+                <span class="seq-msg-sub">RSA Private Key로 Wrapped AES Key 언래핑</span>
+              </div>
+              <div class="seq-dot sd-l sd-violet"></div>
+              <div class="seq-dot sd-r sd-violet"></div>
+            </div>
+
+            <!-- STEP 11b -->
+            <div class="seq-row">
+              <div class="seq-step-num">STEP 11-②</div>
+              <div class="note-aside na-right na-green">복호화된 AES로<br>JSON 데이터 복호화<br>(런처 내부)</div>
+              <div class="seq-msg">
+                <span class="seq-msg-label">🔓 ② AES 키로 JSON 데이터 복호화</span>
+                <span class="seq-msg-sub">VM 접속 정보 + 프로세스 체크 정보 획득</span>
+              </div>
+              <div class="seq-dot sd-l sd-green"></div>
+              <div class="seq-dot sd-r sd-green"></div>
+            </div>
+
+            <!-- FINAL -->
+            <div class="seq-row" style="background:var(--green-bg);">
+              <div class="seq-step-num">FINAL</div>
+              <div class="note-aside na-right na-green">복호화된 데이터로<br>VM 접속 프로그램 실행<br>+ CLI 명령 수행</div>
+              <div class="seq-msg" style="top:calc(50% - 26px);">
+                <span class="seq-msg-label"
+                  style="background:var(--green-bg); border-color:var(--green-border); color:var(--green);">🖥 VM 접속
+                  프로그램 실행 &amp; 커맨드라인 실행</span>
+                <span class="seq-msg-sub">복호화된 VM 정보 기반 접속 · 프로세스 체크 · CLI 명령 수행</span>
+              </div>
+              <div class="seq-dot sd-l sd-green"></div>
+              <div class="seq-dot sd-r sd-green"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 설계 포인트 카드 -->
+        <div style="margin-top:24px;">
+          <div class="card fu d7">
+            <div class="card-icon ci-blue">�</div>
+            <div class="card-body">
+              <div class="card-title">JWT — 안전한 런처 기동 및 인증</div>
+              <div class="card-desc">
+                웹 서버는 <code>callbackUrl</code>을 페이로드에 포함한 JWT를 생성해 런처에 전달한다.
+                런처가 콜백 요청 시 JWT를 헤더에 포함하면 서버는 서명·만료·인증을 3중 검증한다.
+                일회성 토큰 구조로 재전송 공격(Replay Attack)을 원천 차단한다.
+              </div>
+            </div>
+          </div>
+
+          <div class="card fu d8">
+            <div class="card-icon ci-violet">🔑</div>
+            <div class="card-body">
+              <div class="card-title">RSA-OAEP — 일회용 키 교환 (Key Wrapping)</div>
+              <div class="card-desc">
+                런처는 세션마다 일회용 RSA 키쌍을 생성한다. 공개키를 콜백 요청 헤더에 포함해 전송하면
+                서버가 이를 사용해 AES 세션키를 RSA-OAEP 방식으로 암호화(Key Wrapping)하여 응답한다.
+                개인키는 런처만 보유하므로 AES 키는 탈취 불가능하다.
+              </div>
+            </div>
+          </div>
+
+          <div class="card fu d8">
+            <div class="card-icon ci-green">🔐</div>
+            <div class="card-body">
+              <div class="card-title">AES-256 — VM 접속 데이터 암호화</div>
+              <div class="card-desc">
+                실제 VM 접속 정보(호스트·포트·인증 정보)와 프로세스 체크 정보는 AES-256으로 암호화되어
+                응답 바디에 포함된다. 런처는 복호화한 데이터로 VM 접속 프로그램을 실행하고
+                커맨드라인으로 명령을 수행해 접속을 완료한다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hl-box violet fu d5" style="margin-top:8px;">
+          <p>
+            <strong>보안 설계의 핵심 —</strong>
+            JWT로 런처를 안전하게 기동·인증하고, 일회용 RSA 키쌍으로 AES 세션키를 Key Wrapping해 전달한다.
+            VM 접속 데이터는 AES-256으로 암호화하여 네트워크 상에서 평문이 노출되지 않는다.
+            세션마다 새로운 RSA 키쌍과 AES 키를 생성해 이전 세션 키가 유출되어도 독립적인 보안을 보장한다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+     PART C — VDI 포탈 외부 통합 결재 모듈 연동
+═══════════════════════════════════════════ -->
+    <section class="section" style="padding-top:72px;">
+      <div class="wrap">
+        <div class="sec-num fu d1">03</div>
+        <h2 class="sec-title fu d2">VDI 포탈 외부 통합 결재 모듈 연동</h2>
+        <p class="sec-sub fu d3">EXTERNAL APPROVAL INTEGRATION · SOAP &amp; REST API</p>
+
+        <!-- 목적 -->
+        <div class="purpose-box fu d5">
+          <div class="eyebrow">연동 목적</div>
+          <p class="purpose-text">
+            VM 신청(생성 / 증설 / 연장) 기능을 사내 결재망과 연동하여
+            <strong>관리자 승인 절차 프로세스</strong>를 구축했다.
+            결재망은 <strong>SOAP</strong>과 <strong>REST API</strong> 두 가지 방식을 병행 지원하며,
+            SOAP 통신을 위한 별도 JAR 모듈을 직접 설계·제작해 포탈에 적용했다.
+          </p>
+        </div>
+
+        <!-- 흐름 요약 -->
+        <div class="flow-mini fu d6">
+          <div class="eyebrow" style="margin-bottom:12px">결재 요청 흐름 요약</div>
+          <div class="flow-steps">
+            <span class="flow-step">VM 신청 (생성/증설/연장)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">포탈 결재 요청</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">사내 결재망 전송<br><small style="font-size:9px;opacity:.7">SOAP / REST</small></span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">관리자 승인</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">결과 콜백 수신</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">VM 처리 자동화</span>
+          </div>
+        </div>
+
+        <!-- 세부 내용 카드 -->
+        <div style="margin-top:4px;">
+          <div class="eyebrow fu d1" style="margin-bottom:16px">주요 구현 내용</div>
+
+          <div class="card fu d2">
+            <div class="card-icon ci-green">📋</div>
+            <div class="card-body">
+              <div class="card-title">VM 신청 결재 연동 (생성 / 증설 / 연장)</div>
+              <div class="card-desc">
+                VM 생성·증설·연장 신청 시 포탈에서 사내 결재망으로 결재 요청을 자동 전송한다.
+                관리자가 결재망에서 승인·반려하면 결과가 포탈로 콜백되어,
+                승인 시 VM 작업이 자동으로 진행되고 반려 시 신청이 취소 처리된다.
+              </div>
+            </div>
+          </div>
+
+          <div class="card fu d3">
+            <div class="card-icon ci-blue">🔗</div>
+            <div class="card-body">
+              <div class="card-title">REST API 연동</div>
+              <div class="card-desc">
+                사내 결재망의 REST API 엔드포인트를 통해 결재 요청·조회·콜백 처리를 구현했다.
+                표준 HTTP 통신 기반으로 포탈 기존 HTTP 클라이언트 모듈을 재사용하여 연동했다.
+              </div>
+            </div>
+          </div>
+
+          <div class="card fu d4">
+            <div class="card-icon ci-violet">📦</div>
+            <div class="card-body">
+              <div class="card-title">SOAP 전용 JAR 모듈 개발</div>
+              <div class="card-desc">
+                사내 결재망 일부 인터페이스가 SOAP 프로토콜만 지원함에 따라,
+                독립적으로 SOAP 통신이 가능한 <code>JAR 모듈</code>을 별도 제작했다.
+                해당 모듈은 WSDL 기반 SOAP envelope 생성·파싱, 헤더 처리,
+                응답 매핑 기능을 캡슐화하여 포탈 측에서는 메서드 호출만으로 결재망과 통신할 수 있도록 했다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 핵심 포인트 -->
+        <div class="hl-box green fu d5" style="margin-top:24px;">
+          <p>
+            <strong>SOAP JAR 모듈 분리의 이유 —</strong>
+            REST와 달리 SOAP은 WSDL 파싱, envelope 구성, namespace 처리 등
+            별도의 통신 레이어가 필요하다. 이를 독립 JAR로 캡슐화함으로써
+            포탈 코드베이스와 결재망 연동 로직을 명확히 분리하고,
+            향후 결재망 스펙 변경 시 JAR 모듈만 교체하면 되도록 유지보수성을 확보했다.
+          </p>
+        </div>
+
+        <!-- KP -->
+        <div class="kp-grid fu d6" style="margin-top:28px;">
+          <div class="kp-box">
+            <div class="kp-icon">🗂</div>
+            <div class="kp-label">신청 유형</div>
+            <div class="kp-value">3종</div>
+            <div class="kp-desc">VM 생성 / 증설 / 연장.<br>모든 유형에 결재 프로세스 적용.</div>
+          </div>
+          <div class="kp-box">
+            <div class="kp-icon">🔌</div>
+            <div class="kp-label">연동 방식</div>
+            <div class="kp-value">SOAP + REST</div>
+            <div class="kp-desc">사내 결재망 프로토콜 병행 지원.<br>SOAP JAR 모듈 직접 제작.</div>
+          </div>
+          <div class="kp-box">
+            <div class="kp-icon">✅</div>
+            <div class="kp-label">처리 방식</div>
+            <div class="kp-value">콜백 자동화</div>
+            <div class="kp-desc">승인 시 VM 작업 자동 진행.<br>반려 시 신청 자동 취소.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-inner">
+        <span class="footer-copy">SK하이닉스 SeedVDI 신규 구축 프로젝트 · Dfocus</span>
+        <div class="footer-tags">
+          <span class="tag tag-blue">Batch Collection</span>
+          <span class="tag tag-violet">Security Module</span>
+          <span class="tag tag-green">Approval Integration</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>

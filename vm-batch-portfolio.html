@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VM 상태 수집 배치 시스템 — 포트폴리오</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:   #1a1a1a;
+  --ink-2: #3a3a3a;
+  --ink-3: #6a6a6a;
+  --ink-4: #9a9a9a;
+  --rule:  #e4e4e4;
+  --rule-2:#f0f0f0;
+  --surface: #f6f6f4;
+  --surface-2: #f0efec;
+  --white: #ffffff;
+
+  --green:        #2d6a4f;
+  --green-bg:     #edf7f2;
+  --green-border: #b7dfc9;
+
+  --blue:         #1d4e8a;
+  --blue-bg:      #eef4fb;
+  --blue-border:  #b3cde8;
+
+  --violet:       #4a3880;
+  --violet-bg:    #f0edfb;
+  --violet-border:#c9bfee;
+
+  --amber:        #7a4f10;
+  --amber-bg:     #fdf5e6;
+  --amber-border: #e8cfa0;
+
+  --red:          #8b2020;
+  --red-bg:       #fdf0f0;
+  --red-border:   #e8b0b0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation: fadeUp 0.55s ease both; }
+.d1 { animation-delay: 0.05s; }
+.d2 { animation-delay: 0.12s; }
+.d3 { animation-delay: 0.20s; }
+.d4 { animation-delay: 0.28s; }
+.d5 { animation-delay: 0.36s; }
+.d6 { animation-delay: 0.44s; }
+.d7 { animation-delay: 0.52s; }
+
+/* ── LAYOUT ── */
+.wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── HEADER ── */
+.site-header {
+  padding: 72px 0 60px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.header-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.header-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+.header-desc {
+  font-size: 15px;
+  color: var(--ink-3);
+  max-width: 560px;
+  line-height: 1.85;
+}
+
+.header-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 24px;
+}
+
+/* ── TAGS ── */
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  border: 1px solid;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+.tag-default { border-color: var(--rule);  color: var(--ink-3); background: var(--surface); }
+.tag-green   { border-color: var(--green-border); color: var(--green);  background: var(--green-bg); }
+.tag-blue    { border-color: var(--blue-border);  color: var(--blue);   background: var(--blue-bg); }
+.tag-violet  { border-color: var(--violet-border);color: var(--violet); background: var(--violet-bg); }
+.tag-amber   { border-color: var(--amber-border); color: var(--amber);  background: var(--amber-bg); }
+
+/* ── SECTION ── */
+.section {
+  padding: 64px 0 0;
+}
+
+.section-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(21px, 3vw, 26px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.section-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ── PURPOSE BOX ── */
+.purpose-box {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 24px 26px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 8px;
+}
+
+.purpose-text {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.9;
+}
+
+/* ── INLINE CODE ── */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--ink-2);
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  margin-top: 4px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--rule);
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 32px;
+}
+.tl-item:last-child { margin-bottom: 0; }
+
+.tl-dot {
+  position: absolute;
+  left: -25px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1.5px solid var(--ink-3);
+}
+.tl-dot.green  { border-color: var(--green);  background: var(--green-bg); }
+.tl-dot.blue   { border-color: var(--blue);   background: var(--blue-bg); }
+.tl-dot.violet { border-color: var(--violet); background: var(--violet-bg); }
+.tl-dot.amber  { border-color: var(--amber);  background: var(--amber-bg); }
+
+.tl-phase {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 4px;
+}
+.tl-phase.green  { color: var(--green); }
+.tl-phase.blue   { color: var(--blue); }
+.tl-phase.violet { color: var(--violet); }
+.tl-phase.amber  { color: var(--amber); }
+
+.tl-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+.tl-desc {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  line-height: 1.85;
+}
+
+/* ── CARDS ── */
+.card {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  border-color: #d0d0d0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.card-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 17px;
+  margin-top: 1px;
+}
+.ci-green  { background: var(--green-bg); }
+.ci-blue   { background: var(--blue-bg); }
+.ci-violet { background: var(--violet-bg); }
+.ci-amber  { background: var(--amber-bg); }
+.ci-red    { background: var(--red-bg); }
+
+.card-body {}
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.card-desc {
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.85;
+}
+
+/* ── ISSUE CARD (amber/red variant) ── */
+.card.warn { border-color: var(--amber-border); background: var(--amber-bg); }
+.card.err  { border-color: var(--red-border);   background: var(--red-bg); }
+
+/* ── ERROR BADGE ── */
+.err-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+  border-radius: 5px;
+  padding: 3px 9px;
+  letter-spacing: 0.04em;
+}
+
+/* ── KEY POINTS ── */
+.kp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.kp-box {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 18px 20px;
+  background: var(--white);
+}
+
+.kp-icon { font-size: 20px; margin-bottom: 10px; }
+
+.kp-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+
+.kp-value {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'Noto Serif KR', serif;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 5px;
+}
+
+.kp-desc {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.75;
+}
+
+/* ── TWO COL ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--rule);
+  margin: 56px 0 0;
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  padding: 40px 0 64px;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+}
+
+/* ── FLOW MINI DIAGRAM ── */
+.flow-mini {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 22px 26px;
+  margin: 20px 0;
+}
+
+.flow-steps {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.flow-step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  background: var(--white);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.flow-arrow {
+  font-size: 13px;
+  color: var(--ink-4);
+  margin: 0 6px;
+}
+
+/* ── HIGHLIGHT BOX ── */
+.hl-box {
+  border-left: 2.5px solid var(--ink-3);
+  padding: 14px 18px;
+  margin: 16px 0;
+  background: var(--surface);
+  border-radius: 0 8px 8px 0;
+}
+.hl-box.green  { border-color: var(--green);  background: var(--green-bg); }
+.hl-box.blue   { border-color: var(--blue);   background: var(--blue-bg); }
+.hl-box.amber  { border-color: var(--amber);  background: var(--amber-bg); }
+.hl-box.red    { border-color: var(--red);    background: var(--red-bg); }
+
+.hl-box p {
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.85;
+}
+
+/* ── TABLE ── */
+.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+}
+.simple-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1.5px solid var(--rule);
+  font-weight: 500;
+}
+.simple-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule-2);
+  color: var(--ink-2);
+  vertical-align: top;
+  line-height: 1.7;
+}
+.simple-table tr:last-child td { border-bottom: none; }
+.simple-table tr:hover td { background: var(--surface); }
+
+/* responsive */
+@media (max-width: 600px) {
+  .wrap { padding: 0 20px; }
+  .kp-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; align-items: flex-start; }
+  .flow-arrow { transform: rotate(90deg); margin: 4px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="wrap">
+    <div class="header-meta fade-up d1">Portfolio · VDI Infrastructure Project</div>
+    <h1 class="header-title fade-up d2">
+      VM 상태 정보<br>수집 배치 시스템
+    </h1>
+    <p class="header-desc fade-up d3">
+      Horizon REST API 기반으로 약 25,000대의 VM 상태를 주기적으로 수집하고
+      DB에 업데이트하는 배치 시스템 설계 및 구현.
+      이중화 호라이즌 제어, 병렬 처리, DB Lock 분리 전략을 포함한다.
+    </p>
+    <div class="header-tags fade-up d4">
+      <span class="tag tag-default">C# / .NET</span>
+      <span class="tag tag-blue">Horizon REST API</span>
+      <span class="tag tag-green">병렬 처리</span>
+      <span class="tag tag-violet">MSSQL</span>
+      <span class="tag tag-amber">Windows Scheduler</span>
+      <span class="tag tag-default">VDI Infrastructure</span>
+    </div>
+  </div>
+</header>
+
+<!-- 01. 프로젝트 배경 -->
+<main>
+<section class="section">
+  <div class="wrap">
+    <div class="section-number fade-up d1">01</div>
+    <h2 class="section-title fade-up d2">프로젝트 배경</h2>
+    <p class="section-sub fade-up d3">BACKGROUND · WHY THIS WAS NEEDED</p>
+
+    <div class="purpose-box fade-up d4">
+      <div class="eyebrow">문제 정의</div>
+      <p class="purpose-text">
+        VDI 포탈에서 VM의 실시간 상태(가동 여부, 사용자 연결 등)를 표시하려면
+        각 Horizon 서버로부터 VM 상태 정보를 주기적으로 수집해야 한다.
+        기존에는 <strong>Event DB 조회</strong> 방식을 사용했으나,
+        이는 실시간성이 낮고 이벤트 누락 가능성이 있었다.
+        Horizon이 제공하는 <strong>REST API를 직접 호출</strong>하여
+        정확하고 최신 상태를 주기적으로 수집하는 배치 구조로 전환이 필요했다.
+      </p>
+    </div>
+
+    <div class="two-col fade-up d5">
+      <div class="card err">
+        <div class="card-icon ci-red">⚠</div>
+        <div class="card-body">
+          <div class="card-title">기존 방식의 한계</div>
+          <div class="card-desc">
+            Event DB 폴링 방식으로 실시간 상태 반영이 느리고,
+            이벤트 누락 시 상태 불일치가 발생.
+            약 25,000대 VM의 상태를 커버하기에 구조적으로 부적합.
+          </div>
+        </div>
+      </div>
+      <div class="card" style="border-color:var(--green-border); background:var(--green-bg);">
+        <div class="card-icon ci-green">✓</div>
+        <div class="card-body">
+          <div class="card-title">개선 방향</div>
+          <div class="card-desc">
+            Horizon REST API를 직접 호출하여 VM 상태를 pull 방식으로 수집.
+            배치 주기 5분(조정 가능) 목표, 병렬 처리로 수집 시간 최소화.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02. 시스템 구조 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-number fade-up d1">02</div>
+    <h2 class="section-title fade-up d2">시스템 구조</h2>
+    <p class="section-sub fade-up d3">SYSTEM ARCHITECTURE · OVERALL FLOW</p>
+
+    <div class="flow-mini fade-up d4">
+      <div class="eyebrow" style="margin-bottom:14px">수집 흐름 요약</div>
+      <div class="flow-steps">
+        <span class="flow-step">Windows Scheduler</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">DB Horizon 테이블 조회</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">수집 대상 필터링</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">병렬 API 수집</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">별도 테이블 UPSERT</span>
+      </div>
+    </div>
+
+    <div class="timeline fade-up d5">
+      <div class="tl-item">
+        <div class="tl-dot blue"></div>
+        <div class="tl-phase blue">Step 01 — Trigger</div>
+        <div class="tl-title">Windows Task Scheduler 배치 기동</div>
+        <div class="tl-desc">
+          Windows Task Scheduler가 설정된 주기로 배치를 실행한다.
+          목표 주기는 <strong>5분</strong>이며, Horizon API 응답 속도와
+          DB 업데이트 처리 시간을 실측한 뒤 최종 확정할 예정이다.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot amber"></div>
+        <div class="tl-phase amber">Step 02 — Target Selection</div>
+        <div class="tl-title">수집 대상 Horizon 동적 조회</div>
+        <div class="tl-desc">
+          배치 시작 시 DB의 <strong>Horizon 테이블</strong>에서
+          <code>collect_yn = 'Y'</code>인 행만 조회하여 수집 대상 서버 목록을 구성한다.
+          이중화 구성(Active/Standby)된 호라이즌은 Standby 서버를 <code>collect_yn = 'N'</code>으로
+          설정해 중복 수집을 방지하며, DB 컬럼 변경만으로 즉시 대상 전환이 가능하다.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot violet"></div>
+        <div class="tl-phase violet">Step 03 — API Strategy</div>
+        <div class="tl-title">Horizon REST API 조회 전략 결정</div>
+        <div class="tl-desc">
+          포탈 조회 API를 참고하여 Pool 단위 필터 파라미터 지원 여부를 사전 조사한다.
+          필터가 지원되면 Pool별 분할 병렬 조회로 성능을 최적화하고,
+          지원되지 않으면 호라이즌 단위로 전체 일괄 조회 후 메모리 내에서 처리한다.
+          <strong>현장 담당자에게 필터 적용 vs 전체 조회의 응답 시간 차이 측정을 요청</strong>해야 한다.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-phase green">Step 04 — Parallel Collection</div>
+        <div class="tl-title">호라이즌별 독립 스레드 병렬 수집</div>
+        <div class="tl-desc">
+          수집 대상 Horizon마다 독립 스레드를 할당해 병렬로 API를 호출한다.
+          가장 많은 호라이즌 기준 약 8,000대 VM이 단일 스레드에서 처리되며,
+          API가 필터를 지원할 경우 Pool 단위로 추가 분할해 서브 태스크로 병렬화한다.
+          전체 수집 대상은 약 <strong>25,000대</strong>이다.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-phase green">Step 05 — DB Write</div>
+        <div class="tl-title">별도 상태 테이블에 UPSERT</div>
+        <div class="tl-desc">
+          수집한 VM 상태를 기존 운영 테이블이 아닌
+          배치 전용 <strong>별도 VM 상태 테이블</strong>에 UPSERT한다.
+          포탈 및 Trinity의 조회 쿼리·프로시저는 이 테이블을 JOIN 시
+          <code>WITH (NOLOCK)</code> 옵션을 적용하여 Lock 경합을 우회한다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03. 핵심 설계 결정 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-number fade-up d1">03</div>
+    <h2 class="section-title fade-up d2">핵심 설계 결정</h2>
+    <p class="section-sub fade-up d3">KEY DESIGN DECISIONS · 4 ISSUES</p>
+
+    <div class="card fade-up d4">
+      <div class="card-icon ci-amber">🔀</div>
+      <div class="card-body">
+        <div class="card-title">이중화 호라이즌 수집 제어</div>
+        <div class="card-desc">
+          Horizon은 이중화(Active/Standby)로 구성된 서버가 존재한다.
+          모든 호라이즌에서 수집하면 동일 VM의 상태가 중복 수집되는 문제가 발생한다.
+          이를 막기 위해 DB Horizon 테이블에 <code>collect_yn CHAR(1)</code> 컬럼을 추가하고,
+          배치는 해당 컬럼이 <code>'Y'</code>인 서버만 대상으로 삼는다.
+          이중화 전환 시에도 DB 값 변경만으로 즉시 대상을 바꿀 수 있어 운영 유연성이 높다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up d5">
+      <div class="card-icon ci-red">🔒</div>
+      <div class="card-body">
+        <div class="card-title">DB Table Lock 분리 전략</div>
+        <div class="card-desc">
+          VM 상태는 5분마다 지속적으로 업데이트되므로, 기존 운영 테이블에 직접 쓰면
+          포탈 SELECT와 배치 UPDATE 간 Lock 경합이 발생할 수 있다.
+          이를 방지하기 위해 배치 전용 별도 상태 테이블(<code>vm_status_batch</code> 등)을 별도 생성한다.
+          포탈·Trinity에서 VM 상태를 조회하는 모든 View, Procedure, Query는
+          이 테이블 JOIN 시 <code>WITH (NOLOCK)</code> 옵션을 일괄 적용한다.
+          기존 프로시저의 NOLOCK 패턴을 참고하여 동일한 방식으로 작성한다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up d6">
+      <div class="card-icon ci-blue">🔍</div>
+      <div class="card-body">
+        <div class="card-title">REST API 조회 전략 (사전 조사 필요)</div>
+        <div class="card-desc">
+          포탈에서 사용하는 Horizon REST API를 참고하여 Pool 단위 필터 파라미터 지원 여부를 확인한다.
+          <br><br>
+          <span class="tag tag-green" style="margin-right:6px">Case A — 필터 지원</span>
+          Pool 별로 필터를 걸어 분할 병렬 조회. 성능 최적화 가능.<br>
+          <span class="tag tag-amber" style="margin-right:6px;margin-top:6px;display:inline-block">Case B — 필터 미지원</span>
+          호라이즌 단위로 전체 일괄 조회 후 메모리 내 처리.<br><br>
+          어느 경우든 현장 담당자에게 <strong>필터 적용 vs 전체 조회 응답 시간 비교 측정을 요청</strong>해야 하며,
+          결과에 따라 전략을 확정한다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up d7">
+      <div class="card-icon ci-violet">⚡</div>
+      <div class="card-body">
+        <div class="card-title">배치 주기 조율</div>
+        <div class="card-desc">
+          목표 주기는 <strong>5분</strong>이나, 실제 소요 시간은 API 응답 속도·필터 지원 여부·
+          DB UPSERT 처리 속도에 따라 달라진다. 개발 환경에서 전체 25,000대 수집 소요 시간을 실측하고,
+          병렬 스레드 수 조합을 테스트하여 최적 구성을 확정한 뒤 배치 주기를 최종 결정한다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04. 사전 확인 항목 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-number fade-up d1">04</div>
+    <h2 class="section-title fade-up d2">사전 확인 항목</h2>
+    <p class="section-sub fade-up d3">ACTION ITEMS · BEFORE DEVELOPMENT</p>
+
+    <table class="simple-table fade-up d4">
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>확인 내용</th>
+          <th>담당</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">API 조사</span></td>
+          <td>포탈 조회 API에서 Pool 필터 파라미터 지원 여부 문서 확인</td>
+          <td>개발자</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">API 조사</span></td>
+          <td>
+            필터 적용 vs 전체 조회 응답 시간 비교 측정 요청<br>
+            <span style="font-size:12px;color:var(--ink-4);font-family:'JetBrains Mono',monospace">→ 현장 담당자에게 테스트 요청</span>
+          </td>
+          <td>현장 협조</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">DB 스키마</span></td>
+          <td>
+            Horizon 테이블에 <code>collect_yn CHAR(1)</code> 컬럼 추가<br>
+            이중화 호라이즌 목록 정리 후 <code>collect_yn = 'N'</code> 초기 설정
+          </td>
+          <td>개발자</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">DB 스키마</span></td>
+          <td>배치 전용 VM 상태 테이블(<code>vm_status_batch</code>) 설계 및 생성</td>
+          <td>개발자</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-violet">NOLOCK</span></td>
+          <td>
+            Trinity에서 VM 상태를 조회하는 View / Procedure 목록 파악<br>
+            해당 쿼리에 <code>WITH (NOLOCK)</code> 일괄 적용
+          </td>
+          <td>개발자</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">성능 실측</span></td>
+          <td>
+            25,000대 전체 수집 소요 시간 측정<br>
+            병렬 스레드 수 조합 테스트 → 최적 N값 확정 후 배치 주기 결정
+          </td>
+          <td>개발자</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hl-box amber fade-up d5">
+      <p>
+        <strong>현장 테스트 요청 포인트 —</strong>
+        Horizon REST API에서 Pool 필터를 지원하는지 여부와,
+        지원 시 필터 조회 vs 전체 조회의 응답 시간 차이를 수치로 확인해야
+        최적의 병렬화 전략을 결정할 수 있다.
+        사이트 담당자에게 명시적으로 테스트 결과를 요청할 것.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 05. 핵심 지표 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-number fade-up d1">05</div>
+    <h2 class="section-title fade-up d2">핵심 지표 및 제약 조건</h2>
+    <p class="section-sub fade-up d3">KEY METRICS · CONSTRAINTS</p>
+
+    <div class="kp-grid fade-up d4">
+      <div class="kp-box">
+        <div class="kp-icon">🖥</div>
+        <div class="kp-label">수집 대상 VM</div>
+        <div class="kp-value">~25,000</div>
+        <div class="kp-desc">전체 수집 대상 VM 규모. 최대 단일 호라이즌 ~8,000대 포함.</div>
+      </div>
+      <div class="kp-box">
+        <div class="kp-icon">⏱</div>
+        <div class="kp-label">목표 배치 주기</div>
+        <div class="kp-value">5분</div>
+        <div class="kp-desc">API 응답 및 DB 처리 속도 실측 후 최종 결정. 조정 가능.</div>
+      </div>
+      <div class="kp-box">
+        <div class="kp-icon">⚡</div>
+        <div class="kp-label">병렬 스레드</div>
+        <div class="kp-value">N 스레드</div>
+        <div class="kp-desc">수집 대상 Horizon 수 및 API 필터 지원 여부에 따라 구성. 실측 후 확정.</div>
+      </div>
+      <div class="kp-box">
+        <div class="kp-icon">🔒</div>
+        <div class="kp-label">Lock 분리</div>
+        <div class="kp-value">별도 테이블</div>
+        <div class="kp-desc">배치 전용 상태 테이블로 Lock 경합 분리. Trinity 조회 시 NOLOCK 적용.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06. 기술 스택 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-number fade-up d1">06</div>
+    <h2 class="section-title fade-up d2">기술 스택</h2>
+    <p class="section-sub fade-up d3">TECH STACK · IMPLEMENTATION</p>
+
+    <div class="card fade-up d4">
+      <div class="card-icon ci-blue">💻</div>
+      <div class="card-body">
+        <div class="card-title">배치 프로그램 — C# / .NET</div>
+        <div class="card-desc">
+          Windows Task Scheduler로 기동되는 C# 콘솔 애플리케이션.
+          <code>Task.WhenAll</code> 또는 <code>Parallel</code> 클래스를 활용해
+          Horizon별 독립 스레드를 구성하고 병렬로 API를 호출한다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up d5">
+      <div class="card-icon ci-violet">🌐</div>
+      <div class="card-body">
+        <div class="card-title">Horizon REST API</div>
+        <div class="card-desc">
+          VMware Horizon이 제공하는 REST API를 <code>HttpClient</code>로 호출.
+          포탈 조회 API와 동일한 엔드포인트를 참고하며,
+          Pool 필터 파라미터 지원 여부에 따라 분할 조회 또는 일괄 조회 방식을 결정한다.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up d6">
+      <div class="card-icon ci-amber">🗄</div>
+      <div class="card-body">
+        <div class="card-title">MSSQL · 별도 상태 테이블</div>
+        <div class="card-desc">
+          수집 결과는 배치 전용 VM 상태 테이블에 UPSERT(<code>MERGE</code> 또는
+          <code>INSERT … ON CONFLICT</code> 패턴).
+          Trinity 및 포탈의 조회 Stored Procedure · View에는 <code>WITH (NOLOCK)</code>을 적용하여
+          배치 Write와의 Lock 경합을 방지한다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="divider"></div>
+<footer class="site-footer">
+  <div class="wrap">
+    VM Status Batch System · VDI Infrastructure Project · Dfocus
+  </div>
+</footer>
+
+</body>
+</html>

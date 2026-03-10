@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VDI AI 통합 솔루션 포트폴리오</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0f0f0f;
+      --ink-2: #2e2e2e;
+      --ink-3: #5a5a5a;
+      --ink-4: #9a9a9a;
+      --rule: #e0e0e0;
+      --surface: #f5f5f3;
+      --surface-2: #eeede9;
+      --white: #ffffff;
+
+      --green: #2d6a4f;
+      --green-bg: #edf5f0;
+      --green-border: #b7d9c6;
+
+      --blue: #1a4a7a;
+      --blue-bg: #eef3f9;
+      --blue-border: #b3ccdf;
+
+      --violet: #4a2d7a;
+      --violet-bg: #f2eef9;
+      --violet-border: #ccb7df;
+
+      --red: #7a1a2d;
+      --red-bg: #f9eef0;
+      --red-border: #dfb3bc;
+
+      --amber: #7a5a1a;
+      --amber-bg: #f9f5ee;
+      --amber-border: #dfcfb3;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--ink-2);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 80px 40px 120px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-up {
+      opacity: 0;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 52px;
+      margin-bottom: 72px;
+      animation: fadeUp 0.5s ease 0.05s forwards;
+      opacity: 0;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 18px;
+    }
+
+    .site-header h1 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    .site-header .subtitle {
+      font-size: 14.5px;
+      color: var(--ink-3);
+      max-width: 580px;
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    .role-chip {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      color: var(--ink-3);
+      margin: 3px 3px 3px 0;
+    }
+
+    .role-chip.primary {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    /* ── HR ── */
+    hr.rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 68px 0;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section {
+      margin-bottom: 72px;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(19px, 2.8vw, 25px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 5px;
+    }
+
+    .section-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--ink-4);
+      letter-spacing: 0.08em;
+      margin-bottom: 28px;
+    }
+
+    /* ── PURPOSE BOX ── */
+    .purpose-box {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin-bottom: 30px;
+    }
+
+    .purpose-box .box-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 10px;
+    }
+
+    .purpose-box p {
+      font-size: 14px;
+      color: var(--ink-3);
+      line-height: 1.82;
+    }
+
+    /* ── ARCH DIAGRAM ── */
+    .arch-wrap {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .arch-top-bar {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--rule);
+      padding: 10px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-4);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .arch-diagram {
+      padding: 28px 24px 24px;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .arch-node {
+      border: 1px solid var(--rule);
+      border-radius: 9px;
+      padding: 11px 20px;
+      text-align: center;
+      background: var(--white);
+      min-width: 180px;
+    }
+
+    .arch-node .n-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-4);
+      margin-bottom: 4px;
+    }
+
+    .arch-node .n-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-2);
+    }
+
+    .arch-node.blue {
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+    }
+
+    .arch-node.amber {
+      background: var(--amber-bg);
+      border-color: var(--amber-border);
+    }
+
+    .arch-node.green {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+
+    .arch-node.violet {
+      background: var(--violet-bg);
+      border-color: var(--violet-border);
+    }
+
+    .arch-node.blue .n-name {
+      color: var(--blue);
+    }
+
+    .arch-node.amber .n-name {
+      color: var(--amber);
+    }
+
+    .arch-node.green .n-name {
+      color: var(--green);
+    }
+
+    .arch-node.violet .n-name {
+      color: var(--violet);
+    }
+
+    .arch-conn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      margin: 4px 0;
+    }
+
+    .arch-conn .proto {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      background: var(--white);
+      padding: 0 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .arch-conn .arrow {
+      font-size: 13px;
+      color: var(--rule);
+    }
+
+    .arch-branch {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .arch-branch-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      max-width: 220px;
+    }
+
+    .proto-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+
+    .proto-badge.green {
+      color: var(--green);
+      border-color: var(--green-border);
+      background: var(--green-bg);
+    }
+
+    .proto-badge.violet {
+      color: var(--violet);
+      border-color: var(--violet-border);
+      background: var(--violet-bg);
+    }
+
+    .arch-branch-divider {
+      width: 1px;
+      background: var(--rule);
+      height: 80px;
+      align-self: center;
+    }
+
+    .arch-note {
+      border-top: 1px solid var(--rule);
+      padding: 16px 24px;
+      background: var(--surface);
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 26px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 10px;
+      bottom: 10px;
+      width: 1px;
+      background: var(--rule);
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 26px;
+    }
+
+    .tl-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -23px;
+      top: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 2px solid var(--rule);
+      background: var(--white);
+    }
+
+    .tl-item.active .tl-dot {
+      border-color: var(--ink-2);
+      background: var(--ink-2);
+    }
+
+    .tl-item.accent .tl-dot {
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .phase {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-4);
+      margin-bottom: 4px;
+    }
+
+    .tl-title {
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .tl-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--ink-4);
+    }
+
+    .card-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .card-icon.blue {
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+    }
+
+    .card-icon.green {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+
+    .card-icon.violet {
+      background: var(--violet-bg);
+      border-color: var(--violet-border);
+    }
+
+    .card-icon.amber {
+      background: var(--amber-bg);
+      border-color: var(--amber-border);
+    }
+
+    .card-title {
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+
+    /* ── KP GRID ── */
+    .kp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    @media (max-width: 520px) {
+      .kp-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kp-box {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+
+    .kp-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--ink-4);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .kp-box p {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.7;
+    }
+
+    /* ── TAGS ── */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      border: 1px solid var(--rule);
+      color: var(--ink-3);
+      background: var(--white);
+    }
+
+    .tag.green {
+      border-color: var(--green-border);
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .tag.blue {
+      border-color: var(--blue-border);
+      color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .tag.violet {
+      border-color: var(--violet-border);
+      color: var(--violet);
+      background: var(--violet-bg);
+    }
+
+    .tag.amber {
+      border-color: var(--amber-border);
+      color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--ink-2);
+    }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      border-radius: 4px;
+      padding: 2px 9px;
+      border: 1px solid var(--red-border);
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .badge.solved {
+      border-color: var(--green-border);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    /* ── PROBLEM-SOLUTION BOX ── */
+    .ps-box {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .ps-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    .ps-side {
+      width: 70px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 18px 10px;
+      border-right: 1px solid var(--rule);
+    }
+
+    .ps-side-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-4);
+
+    }
+
+    .ps-content {
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+      flex: 1;
+    }
+
+    .ps-content strong {
+      color: var(--ink-2);
+    }
+
+    .ps-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 0;
+    }
+
+    .ps-row.problem .ps-side {
+      background: var(--red-bg);
+    }
+
+    .ps-row.solution .ps-side {
+      background: var(--green-bg);
+    }
+
+    /* ── ARCH LAYER (Java) ── */
+    .layer-stack {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .layer-row {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .layer-row:last-child {
+      border-bottom: none;
+    }
+
+    .layer-row.security {
+      background: var(--surface-2);
+    }
+
+    .layer-row.iface {
+      background: var(--white);
+    }
+
+    .layer-row.service {
+      background: var(--blue-bg);
+      border-left: 3px solid var(--blue-border);
+    }
+
+    .layer-row.client-split {
+      background: var(--white);
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+    }
+
+    .split-cell {
+      padding: 14px 18px;
+    }
+
+    .split-divider {
+      background: var(--rule);
+    }
+
+    .layer-icon {
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .layer-name {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .layer-detail {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--ink-4);
+      line-height: 1.5;
+    }
+
+    .layer-arrow {
+      text-align: center;
+      padding: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-4);
+      background: var(--white);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── LLM GRID ── */
+    .llm-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .llm-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      color: var(--ink-3);
+    }
+
+    .llm-chip.highlight {
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+      color: var(--blue);
+    }
+
+    /* ── SUBSECTION ── */
+    .subsection-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 32px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── CONTRIB BANNER ── */
+    .contrib-banner {
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .contrib-banner .icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .contrib-banner h3 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .contrib-banner p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.75;
+    }
+
+    .contrib-banner code {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- ══════════════════════════════ HEADER ══ -->
+    <header class="site-header">
+      <div class="eyebrow">Portfolio · PROJECT</div>
+      <h1>가상화 기반 Al 솔루션</h1>
+      <p class="subtitle">
+        가상 데스크톱 인프라(VDI) 환경에서 사용자와 관리자가 AI를 통해 자원을 관리하고 장애 분석 및 상태를 진단할 수 있는 통합 솔루션입니다.
+        Multi-Agent 구조의 AI Agent, vCenter 리소스 수집 엔진(vCompute), 이들을 연결하는 통합 API 서버 개발을 전담했습니다.
+      </p>
+      <div style="margin-bottom:16px;">
+        <span class="role-chip primary">AI Agent (Python)</span>
+        <span class="role-chip primary">vCompute (C#)</span>
+        <span class="role-chip primary">API Server (Java)</span>
+        <span class="role-chip">Spring Boot</span>
+        <span class="role-chip">Spring AI</span>
+        <span class="role-chip">Spring Security</span>
+        <span class="role-chip">JWT</span>
+        <span class="role-chip">MCP Protocol</span>
+        <span class="role-chip">MSSQL</span>
+        <span class="role-chip">LangChain</span>
+        <span class="role-chip">OpenAI API</span>
+        <span class="role-chip">Claude API</span>
+        <span class="role-chip">Ollama</span>
+        <span class="role-chip">FastAPI</span>
+        <span class="role-chip">WebSocket</span>
+        <span class="role-chip">.NET Framework</span>
+        <span class="role-chip">NuGet</span>
+        <span class="role-chip">VMware Vim SDK</span>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════ ARCHITECTURE ══ -->
+    <!--
+    <section class="section fade-up">
+      <div class="section-number">00</div>
+      <h2 class="section-title">전체 시스템 아키텍처</h2>
+      <div class="section-sub">OVERVIEW · SYSTEM ARCHITECTURE</div>
+
+      <div class="arch-wrap">
+        <div class="arch-top-bar">System Flow Diagram</div>
+        <div class="arch-diagram">
+
+          <div class="arch-node blue" style="min-width:200px;">
+            <div class="n-label">Client</div>
+            <div class="n-name">👤 사용자 / 관리자 (Web)</div>
+          </div>
+
+          <div class="arch-conn">
+            <div class="arrow">↕</div>
+            <div class="proto">REST API (HTTP)</div>
+          </div>
+
+          <div class="arch-node amber" style="min-width:240px;padding:14px 22px;">
+            <div class="n-label">Core · Orchestrator</div>
+            <div class="n-name">☕ Java / Spring Boot (Tomcat)<br>
+              <span style="font-size:11px;color:var(--amber);">통합 API 서버 · 인증(SSO·JWT)</span>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:center;width:100%;margin:0;">
+            <div style="height:20px;width:1px;background:var(--rule);"></div>
+          </div>
+          <div style="display:flex;width:100%;max-width:480px;position:relative;margin-bottom:0;">
+            <div
+              style="position:absolute;top:0;left:50%;width:200px;height:1px;background:var(--rule);transform:translateX(-100%);">
+            </div>
+            <div style="position:absolute;top:0;left:50%;width:200px;height:1px;background:var(--rule);"></div>
+          </div>
+
+          <div class="arch-branch" style="margin-top:0;width:100%;max-width:500px;">
+            <div class="arch-branch-item">
+              <div style="height:20px;width:1px;background:var(--rule);"></div>
+              <div class="proto-badge green">MCP Protocol</div>
+              <div style="height:8px;width:1px;background:var(--rule);"></div>
+              <div class="arch-node green" style="width:100%;">
+                <div class="n-label">AI Layer</div>
+                <div class="n-name">🐍 Python AI Agent<br>
+                  <span style="font-size:11px;color:var(--green);">LangChain · FastAPI</span>
+                </div>
+              </div>
+            </div>
+            <div class="arch-branch-divider"></div>
+            <div class="arch-branch-item">
+              <div style="height:20px;width:1px;background:var(--rule);"></div>
+              <div class="proto-badge violet">Retrofit (REST)</div>
+              <div style="height:8px;width:1px;background:var(--rule);"></div>
+              <div class="arch-node violet" style="width:100%;">
+                <div class="n-label">Infra Engine</div>
+                <div class="n-name">⚙️ C# vCompute<br>
+                  <span style="font-size:11px;color:var(--violet);">VMware vCenter SDK</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="arch-note">
+          <strong>담당 영역:</strong> Python AI Agent · C# vCompute · Java 통합 API 서버 세 컴포넌트를 모두 전담 개발.
+          사용자 Web 요청은 <code>REST API</code>로 Java 서버가 수신하고, Java는 <code>MCP</code>로 AI Agent를, <code>Retrofit</code>으로
+          vCompute를 각각 호출합니다.
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+    -->
+
+    <!-- ══════════════════════════════ 01 PYTHON AI AGENT ══ -->
+    <section class="section fade-up">
+      <div class="section-number">01</div>
+      <h2 class="section-title">AI Agent — Python 기반 Multi-Agent 개발</h2>
+      <div class="section-sub">PYTHON · LANGCHAIN · MULTI-AGENT ARCHITECTURE</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">📐 핵심 목표</div>
+        <p>단일 에이전트의 Context Overload로 인한 환각(Hallucination) 현상을 구조적으로 방지하고, VDI 도메인에 특화된 사용자·관리자 지원 시나리오를 구현했습니다.
+          LangChain 기반의 유연한 멀티 LLM 연동 환경도 함께 구축했습니다.</p>
+      </div>
+
+      <!-- 1-1 Multi-Agent -->
+      <div class="subsection-title">1-1. Multi-Agent 구조 설계</div>
+
+      <div class="ps-box">
+        <div class="ps-row problem">
+          <div class="ps-side">
+            <div class="ps-side-label">Problem</div>
+          </div>
+          <div class="ps-content">
+            <span class="badge">Context Overload</span><br><br>
+            단일 에이전트가 모든 VDI 도메인 지식·도구·히스토리를 하나의 Context에 담을 경우, 토큰 한계 초과 및 <strong>환각(Hallucination) 현상</strong>이 빈번하게
+            발생합니다.
+          </div>
+        </div>
+        <hr class="ps-divider">
+        <div class="ps-row solution">
+          <div class="ps-side">
+            <div class="ps-side-label">Solution</div>
+          </div>
+          <div class="ps-content">
+            <span class="badge solved">Main-Sub Agent 분리</span><br><br>
+            Main Agent가 의도를 분류하고 Sub-Agent에 위임하는 <strong>역할 분리 구조</strong>로 설계했습니다.
+            각 Sub-Agent는 자신의 도메인에 필요한 최소한의 Context만 보유하므로, 응답의 정확도와 일관성이 크게 향상되었습니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 01 · WebSocket / FastAPI</div>
+          <div class="tl-title">사용자 질문 수신 — 실시간 채팅 인터페이스</div>
+          <div class="tl-desc">FastAPI WebSocket으로 낮은 지연(Low-latency) 실시간 응답을 제공합니다.</div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 02 · Main Agent</div>
+          <div class="tl-title">의도 분류 및 Sub-Agent 라우팅</div>
+          <div class="tl-desc">질문 의도를 <span class="tag green" style="font-size:10px;padding:2px 7px;display:inline;">사용자
+              지원</span> <span class="tag violet" style="font-size:10px;padding:2px 7px;display:inline;">관리자 지원</span>
+            <span class="tag" style="font-size:10px;padding:2px 7px;display:inline;">일반 문의</span> 로 분류 후, 담당 Sub-Agent로
+            작업을 위임합니다.
+          </div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 03 · Memory Manager</div>
+          <div class="tl-title">대화 히스토리 기반 Context 유지</div>
+          <div class="tl-desc">대화 이력(Conversation History)을 참조해 멀티턴(Multi-turn) 대화에서도 문맥이 끊기지 않도록 관리합니다.</div>
+        </div>
+        <div class="tl-item accent">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 04 · Sub-Agents (Domain Specialized)</div>
+          <div class="tl-title">VDI 도메인 특화 작업 실행</div>
+          <div class="tl-desc">
+            <strong>사용자 지원 에이전트:</strong> VM 상태 이슈 자가 진단 및 조치 방법 안내, 사용자 자원 현황 조회.<br>
+            <strong>관리자 지원 에이전트:</strong> 다수 사용자의 VDI 이력 추적, 상태 일괄 업데이트 등 반복 관리 업무 자동화.
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 05 · LangChain · LLM Router</div>
+          <div class="tl-title">동적 LLM 선택 및 호출</div>
+          <div class="tl-desc">프로젝트 특성·비용·성능 요구에 따라 아래 모델 중 최적 모델로 동적 교체가 가능합니다.</div>
+        </div>
+      </div>
+
+      <!-- LLM 목록 -->
+      <div style="margin:20px 0 0 26px;">
+        <div class="purpose-box" style="background:var(--white);">
+          <div class="box-eyebrow">🔌 연동 LLM 목록 (LangChain 기반)</div>
+          <div class="llm-grid">
+            <span class="llm-chip highlight">OpenAI GPT</span>
+            <span class="llm-chip highlight">Anthropic Claude</span>
+            <span class="llm-chip">Gemini</span>
+            <span class="llm-chip">Grok</span>
+            <span class="llm-chip">Luxia</span>
+            <span class="llm-chip">Friendli</span>
+            <span class="llm-chip">Ollama (Local)</span>
+          </div>
+          <p style="font-size:13px;color:var(--ink-4);margin-top:10px;">LangChain의 추상화 레이어를 활용해 모델 교체 시 비즈니스 로직 변경 없이
+            <code>config</code>만으로 전환 가능하도록 구현했습니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- 1-2 Prompt Engineering -->
+      <div class="subsection-title">1-2. VDI 도메인 특화 프롬프트 엔지니어링</div>
+
+      <div class="card">
+        <div class="card-icon green">🎯</div>
+        <div>
+          <div class="card-title">정교한 도메인 지식 임베딩</div>
+          <div class="card-desc">VMware VDI 환경(DataCenter, Cluster, Host, VM 계층 구조, 이벤트 유형)에 대한 도메인 지식을 시스템 프롬프트에 체계적으로
+            작성하여, 에이전트가 가상화 환경 특유의 이슈를 정확하게 해석하고 응답할 수 있도록 고도화했습니다.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon blue">👤</div>
+        <div>
+          <div class="card-title">사용자 지원 에이전트 시나리오</div>
+          <div class="card-desc">VM 상태 이슈(연결 불가, 성능 저하 등)를 AI가 자동 진단하고 <strong>자가 조치 가이드</strong>를 제공합니다. 사용자가 직접 자신의
+            VDI 자원 현황을 조회하고 관리할 수 있는 대화형 인터페이스를 구현했습니다.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon violet">🛠</div>
+        <div>
+          <div class="card-title">관리자 지원 에이전트 시나리오</div>
+          <div class="card-desc">수십~수백 사용자의 VDI 이력을 추적하고, 상태 업데이트·이상 감지 등 <strong>반복적인 관리 업무를 자동화</strong>하는 시나리오를
+            설계했습니다. 관리자 생산성을 높이고 운영 오류를 줄이는 것이 핵심 목표입니다.</div>
+        </div>
+      </div>
+
+      <div class="kp-grid">
+        <div class="kp-box">
+          <div class="kp-label">🧠 환각 방지 전략</div>
+          <p>역할 분리로 각 에이전트의 Context 범위를 최소화. 필요한 도구·지식만 주입해 응답 정확도를 높였습니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🔌 LLM 유연성</div>
+          <p>7종 이상 LLM을 <code>config</code> 변경만으로 교체 가능. 프로젝트 예산·성능 요건에 즉각 대응합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">📋 자가 진단 UX</div>
+          <p>사용자가 IT 지식 없이도 VM 이슈를 AI와 대화하며 스스로 해결할 수 있는 경험을 제공합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">⚙️ 관리 자동화</div>
+          <p>반복적인 VDI 상태 추적·업데이트 업무를 에이전트가 자동 처리하여 관리자 운영 부담을 줄였습니다.</p>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag green">Python</span>
+        <span class="tag green">FastAPI</span>
+        <span class="tag green">LangChain</span>
+        <span class="tag blue">Multi-Agent</span>
+        <span class="tag blue">WebSocket</span>
+        <span class="tag violet">Prompt Engineering</span>
+        <span class="tag">Ollama</span>
+        <span class="tag amber">OpenAI</span>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══════════════════════════════ 02 vCOMPUTE ══ -->
+    <section class="section fade-up">
+      <div class="section-number">02</div>
+      <h2 class="section-title">vCompute — C# 기반 vCenter 리소스 수집 엔진</h2>
+      <div class="section-sub">C# · VMWARE VIM SDK · MEMORY CACHING</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">📐 핵심 목표</div>
+        <p>.NET Framework 4.5.2와 VMware Vim SDK를 활용해 vCenter 계층 구조(DataCenter → Cluster → Host → VM)의 리소스 정보와
+          이벤트·태스크 이력을 조회하는 REST API를 개발했습니다. SDK의 페이징 부재로 인한 <strong>서버 과부하·응답 지연·먹통 현상</strong>을
+          <strong>서버 측 Count 제한</strong>과 <strong>호출 모듈의 커서 기반 순차 재조회</strong> 설계로 해결하여 대규모 인프라 환경에서도 안정적인 성능을 확보했습니다.
+        </p>
+      </div>
+
+      <!-- 2-1 VMware SDK -->
+      <div class="subsection-title">2-1. VMware Vim SDK 연동 및 REST API 개발</div>
+
+      <div class="card">
+        <div class="card-icon violet">🔌</div>
+        <div>
+          <div class="card-title">vCenter 이벤트·태스크 수집 API</div>
+          <div class="card-desc">
+            <code>.NET Framework 4.5.2</code> + <code>VMware.Vim SDK</code>를 활용해 DataCenter, Cluster, Host, VM의 리소스 현황과
+            <strong>이벤트(Event) 및 태스크(Task)</strong> 이력을 조회하는 REST API를 설계·개발했습니다.
+            API는 <code>startTime</code>(시작시간)과 <code>id</code>(선택)를 파라미터로 수신합니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-2 커서 기반 순차 재조회 설계 -->
+      <div class="subsection-title">2-2. 커서 기반 순차 재조회 설계</div>
+
+      <div class="ps-box">
+        <div class="ps-row problem">
+          <div class="ps-side">
+            <div class="ps-side-label">Problem</div>
+          </div>
+          <div class="ps-content">
+            <span class="badge">SDK 페이징 부재 · 대량 응답 문제</span><br><br>
+            VMware Vim SDK에는 표준 Paging 기능이 없어, 한 번의 호출로 <strong>수만 건이 반환</strong>될 수 있습니다.
+            이를 제한 없이 허용하면 <strong>서버 과부하 · 응답 지연 · 먹통 현상</strong>이 발생합니다.
+          </div>
+        </div>
+        <hr class="ps-divider">
+        <div class="ps-row solution">
+          <div class="ps-side">
+            <div class="ps-side-label">Solution</div>
+          </div>
+          <div class="ps-content">
+            <span class="badge solved">서버 Count 제한 + 호출 모듈 순차 재조회</span><br><br>
+            엔진 서버는 <code>web.config</code>의 <strong>최대 조회 건수(Count)</strong>만큼만 반환하고,
+            외부 <strong>호출 모듈</strong>이 반환된 마지막 이벤트/태스크의 시작시간과 ID를 커서로 삼아
+            다음 구간을 재조회하는 방식으로 전체 데이터를 순차 수집합니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- API 파라미터 분기 설명 -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-icon blue">📋</div>
+        <div>
+          <div class="card-title">API 파라미터 분기 — <code>startTime</code> + <code>id</code> (선택)</div>
+          <div class="card-desc">
+            호출 모듈은 두 가지 파라미터를 엔진 API에 전달합니다.<br><br>
+            <strong>① id 없이 호출</strong> — <code>startTime</code>부터의 이벤트·태스크를 Count 건만큼 반환합니다. 최초 조회 또는 새 구간 시작 시
+            사용합니다.<br><br>
+            <strong>② id 포함 호출</strong> — <code>startTime</code> 범위 내에서 해당 <code>id</code> 다음 레코드부터 조회합니다.
+            동일 타임스탬프 구간 내 누락 없이 이어서 수집할 때 사용합니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline" style="margin-top:24px;">
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 01 · 호출 모듈 → 최초 API 요청</div>
+          <div class="tl-title">startTime 전달, id 없이 첫 조회</div>
+          <div class="tl-desc">호출 모듈이 수집 시작 시간(<code>startTime</code>)만 전달합니다. 엔진은 해당 시점부터 <code>web.config</code>의
+            <code>Count</code>만큼 이벤트·태스크를 조회하여 반환합니다.
+          </div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 02 · 엔진 → Count 단위 반환</div>
+          <div class="tl-title">최대 조회 건수만큼 이벤트·태스크 응답</div>
+          <div class="tl-desc">서버는 Count 건을 채워 응답합니다. 응답에는 마지막 레코드의
+            <strong>이벤트/태스크 시작시간</strong>과 <strong>고유 ID</strong>가 포함됩니다.
+          </div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 03 · 호출 모듈 → 잔여 데이터 판단</div>
+          <div class="tl-title">반환 건수 == Count 이면 추가 데이터 존재로 판단</div>
+          <div class="tl-desc">반환 건수가 <code>Count</code>와 같으면 호출 모듈은 잔여 데이터가 있다고 간주하고 재조회를 준비합니다.
+            반환 건수 &lt; Count이면 수집 완료로 판단하고 종료합니다.</div>
+        </div>
+        <div class="tl-item accent">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 04 · 호출 모듈 → 커서로 재조회</div>
+          <div class="tl-title">마지막 시작시간 + id를 커서로 API 재호출</div>
+          <div class="tl-desc">호출 모듈이 직전 응답의 마지막 <strong>이벤트/태스크 시작시간</strong>과 <strong>id</strong>를
+            파라미터로 엔진 API를 재호출합니다. 엔진은 해당 id 다음 레코드부터 Count만큼 반환하여 중복·누락 없는 연속 수집을 보장합니다.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="phase">Step 05 · 반복 → 수집 완료</div>
+          <div class="tl-title">반환 건수 &lt; Count 될 때까지 Step 02–04 반복</div>
+          <div class="tl-desc">호출 모듈이 Step 02–04를 반복하며 전체 이벤트·태스크를 순차 수집합니다.
+            마지막 페이지에서 반환 건수가 Count보다 적으면 수집을 종료합니다.</div>
+        </div>
+      </div>
+
+      <!-- 2-3 캐싱 전략 -->
+      <div class="subsection-title">2-3. 세션 버퍼 기반 메모리 캐싱 전략</div>
+
+      <div class="card">
+        <div class="card-icon amber">⚡</div>
+        <div>
+          <div class="card-title">원격 호출 최소화 → 즉시 메모리 반환</div>
+          <div class="card-desc">vCenter API의 네트워크 지연(RTT)과 서버 부하를 줄이기 위해 조회된 데이터를 세션 버퍼에 캐싱합니다. 이후 동일 요청은 원격 호출 없이
+            메모리에서 즉시 반환하여 대규모 인프라 환경에서도 안정적인 API 서비스를 제공합니다.</div>
+        </div>
+      </div>
+
+      <div class="kp-grid">
+        <div class="kp-box">
+          <div class="kp-label">🔁 호출 모듈 재조회 설계</div>
+          <p>재조회 책임을 외부 호출 모듈에 위임하여 엔진 서버 부하를 최소화. 엔진은 단순 Count 반환에 집중합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">⚙️ 서버 Count 제한</div>
+          <p><code>web.config</code>의 Count 값으로 최대 응답 건수를 제어. 인프라 환경에 맞게 튜닝 가능합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🔒 중복·누락 방지</div>
+          <p>시작시간 + ID 커서 방식으로 페이지 경계에서의 이벤트·태스크 중복·누락을 구조적으로 방지합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">⚡ 캐싱 TTL</div>
+          <p><code>moREF</code> 키 기반 10초 TTL로 중복 SDK 호출을 차단, 응답 속도 개선 및 vCenter 서버 보호.</p>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag violet">C# / .NET 4.5.2</span>
+        <span class="tag violet">VMware Vim SDK</span>
+        <span class="tag amber">Memory Cache</span>
+        <span class="tag blue">Cursor-based Paging</span>
+        <span class="tag green">Event · Task 수집</span>
+        <span class="tag">REST API</span>
+        <span class="tag">moREF</span>
+        <span class="tag">web.config</span>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══════════════════════════════ 03 JAVA API SERVER ══ -->
+    <section class="section fade-up">
+      <div class="section-number">03</div>
+      <h2 class="section-title">Java / Spring Boot 기반 통합 API 서버</h2>
+      <div class="section-sub">JAVA · SPRING BOOT · MCP · RETROFIT</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">📐 핵심 목표</div>
+        <p>사용자 Web 요청(REST)과 Python AI Agent의 MCP Tool 호출이라는 두 인터페이스를 단일 Service 레이어로 통합했습니다. 또한 이종 언어 시스템인 C# vCompute를
+          <code>Retrofit</code>으로 타입 안정성 있게 연동하여 Java 생태계 안에서 일관된 방식으로 인프라 데이터를 활용할 수 있도록 했습니다.
+        </p>
+      </div>
+
+      <!-- 3-1 Hybrid Interface -->
+      <div class="subsection-title">3-1. 하이브리드 인터페이스 — Service Layer 공통화</div>
+
+      <div class="layer-stack">
+        <!-- Security -->
+        <div class="layer-row security">
+          <div class="layer-icon">🔒</div>
+          <div>
+            <div class="layer-name">Spring Security (JWT / SSO)</div>
+            <div class="layer-detail">모든 요청의 관문 — 인증 · 인가 · 필터 체인</div>
+          </div>
+        </div>
+        <div class="layer-arrow">↓ 인증된 요청만 통과</div>
+        <!-- Interface Layer -->
+        <div class="layer-row iface" style="display:grid;grid-template-columns:1fr 1px 1fr;padding:0;">
+          <div style="padding:16px 18px;">
+            <div class="layer-icon" style="margin-bottom:6px;">🌐</div>
+            <div class="layer-name" style="font-size:13px;">REST Controller</div>
+            <div class="layer-detail"><code>@GetMapping</code> · <code>@PostMapping</code><br>
+              <span style="font-size:9.5px;color:var(--blue);">← 사용자 Web 요청 수신</span>
+            </div>
+          </div>
+          <div style="background:var(--rule);"></div>
+          <div style="padding:16px 18px;">
+            <div class="layer-icon" style="margin-bottom:6px;">🤖</div>
+            <div class="layer-name" style="font-size:13px;">MCP Tool</div>
+            <div class="layer-detail"><code>@Tool</code> · <code>@ToolParam</code><br>
+              <span style="font-size:9.5px;color:var(--green);">← Python AI Agent 전용</span>
+            </div>
+          </div>
+        </div>
+        <div class="layer-arrow">↓ 동일한 Service 메서드 호출</div>
+        <!-- Unified Service -->
+        <div class="layer-row service">
+          <div class="layer-icon">⚙️</div>
+          <div>
+            <div class="layer-name" style="color:var(--blue);">Unified Service Layer</div>
+            <div class="layer-detail">REST · MCP 양쪽 인터페이스에서 공용으로 사용하는 단일 비즈니스 로직.<br>인터페이스가 추가돼도 Service 코드 변경 없이 확장 가능.
+            </div>
+          </div>
+        </div>
+        <div class="layer-arrow">↓ 하위 시스템 호출</div>
+        <!-- Downstream -->
+        <div class="layer-row" style="border-bottom:none;">
+          <div class="layer-icon">⚙️</div>
+          <div>
+            <div
+              style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--violet);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">
+              Retrofit (REST) ↓</div>
+            <div class="layer-name">vCompute Connector</div>
+            <div class="layer-detail">C# vCompute REST API 호출 · 타입 안전(Type-safe) 연동</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-2 Retrofit -->
+      <div class="subsection-title">3-2. Retrofit을 활용한 이종 언어 시스템 연동 (Java ↔ C#)</div>
+
+      <div class="contrib-banner">
+        <div class="icon">🔗</div>
+        <div>
+          <h3>Type-safe Cross-language Integration</h3>
+          <p><code>Retrofit</code> 라이브러리를 도입하여 C#으로 작성된 vCompute의 REST API를 Java 환경에서 <strong>타입
+              안정성(Type-safe)</strong>있게 호출합니다. 인터페이스 선언만으로 HTTP 통신 코드가 자동 생성되므로, 보일러플레이트 없이 일관된 방식으로 이종 언어 시스템을 연동할 수
+            있습니다.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon amber">📋</div>
+        <div>
+          <div class="card-title">Retrofit 인터페이스 선언 방식</div>
+          <div class="card-desc">Java 인터페이스에 <code>@GET</code>, <code>@POST</code> 어노테이션으로 C# API 엔드포인트를 선언합니다.
+            Retrofit이 런타임에 구현체를 자동 생성하므로, C# API 명세가 바뀌어도 인터페이스 수정만으로 대응 가능합니다.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon violet">⚡</div>
+        <div>
+          <div class="card-title">타입 안정성 확보 → 런타임 오류 사전 방지</div>
+          <div class="card-desc">응답 데이터를 Java DTO(Data Transfer Object)로 자동 역직렬화합니다. 컴파일 단계에서 타입 불일치를 감지하여 이종 언어 간 통신에서
+            발생하기 쉬운 런타임 오류를 사전에 방지합니다.</div>
+        </div>
+      </div>
+
+      <div class="kp-grid">
+        <div class="kp-box">
+          <div class="kp-label">🔌 이중 인터페이스</div>
+          <p>REST · MCP 두 프로토콜을 동시에 지원하면서도 단일 Service 코드로 관리합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🔗 Retrofit 연동</div>
+          <p>C# vCompute API를 Java에서 타입 안전하게 호출. 보일러플레이트 코드 없이 이종 언어 통합을 실현합니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">📦 확장성</div>
+          <p>새 인터페이스 추가 시 Service 레이어 변경 없이 Controller/Tool 레이어만 추가하면 됩니다.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🔒 통합 보안</div>
+          <p>JWT·SSO 인증이 단일 Spring Security 필터 체인에서 처리되어 모든 인터페이스에 일관되게 적용됩니다.</p>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag amber">Spring Boot</span>
+        <span class="tag amber">Spring Security</span>
+        <span class="tag amber">Spring AI</span>
+        <span class="tag blue">MCP Protocol</span>
+        <span class="tag blue">REST API</span>
+        <span class="tag violet">Retrofit</span>
+        <span class="tag">JWT · SSO</span>
+        <span class="tag">Tomcat</span>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = `fadeUp 0.5s ease ${i * 0.04}s forwards`;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+
+</html>
