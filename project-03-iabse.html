@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IABSE 2026 결제 시스템 — Project 03</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* CSS 변수 선언 (글로벌 스코프 통합) */
+    :root {
+      --ink: #0f0f0f;
+      --ink-2: #2e2e2e;
+      --ink-3: #5a5a5a;
+      --ink-4: #9a9a9a;
+      --rule: #e0e0e0;
+      /* Project 03 전용 밝은 border color 믹스 */
+      --rule-2: #eaeaea; 
+      --surface: #f5f5f3;
+      --surface-2: #eeede9;
+      --white: #ffffff;
+
+      --green: #2d6a4f;
+      --green-bg: #edf5f0;
+      --green-border: #b7d9c6;
+
+      --blue: #1a4a7a;
+      --blue-bg: #eef3f9;
+      --blue-border: #b3ccdf;
+
+      --violet: #4a2d7a;
+      --violet-bg: #f2eef9;
+      --violet-border: #ccb7df;
+
+      --red: #7a1a2d;
+      --red-bg: #f9eef0;
+      --red-border: #dfb3bc;
+
+      --amber: #7a5a1a;
+      --amber-bg: #f9f5ee;
+      --amber-border: #dfcfb3;
+    }
+
+    /* 리셋 및 기본 스타일 */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--ink-2);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 페이징 컨테이너 */
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0px 40px 120px;
+    }
+
+    /* 네비게이션: 고정 sticky */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 24px 40px;
+      margin-bottom: 50px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .site-nav a {
+      color: var(--ink-4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .site-nav a:hover,
+    .site-nav a.active {
+      color: var(--ink);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    /* 공용 유틸리티 */
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 18px;
+    }
+
+    hr.rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 68px 0;
+    }
+
+    /* 애니메이션 */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { opacity: 0; }
+
+    /* 헤더 영역 */
+    .site-header {
+      padding-bottom: 52px;
+      margin-bottom: 72px;
+      animation: fadeUp 0.5s ease 0.05s forwards;
+    }
+    
+    .site-header h1 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+    
+    .site-header .subtitle {
+      font-size: 14.5px;
+      color: var(--ink-3);
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    .role-chip {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      color: var(--ink-3);
+      margin: 3px 3px 3px 0;
+    }
+    .role-chip.primary {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    /* 섹션 공통 */
+    .section { margin-bottom: 72px; }
+    
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    
+    .section-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(19px, 2.8vw, 25px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 5px;
+    }
+    
+    .section-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--ink-4);
+      letter-spacing: 0.08em;
+      margin-bottom: 28px;
+    }
+    
+    .subsection-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 32px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* Purpose Box (목적/개요 기술용 회색 상자) */
+    .purpose-box {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin-bottom: 30px;
+    }
+    .purpose-box .box-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 10px;
+    }
+    .purpose-box p {
+      font-size: 14px;
+      color: var(--ink-3);
+      line-height: 1.82;
+    }
+
+    /* 카드형 정보 디자인 */
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+    .card:hover { border-color: var(--ink-4); }
+    
+    .card-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .card-icon.blue { background: var(--blue-bg); border-color: var(--blue-border); }
+    .card-icon.green { background: var(--green-bg); border-color: var(--green-border); }
+    .card-icon.violet { background: var(--violet-bg); border-color: var(--violet-border); }
+    .card-icon.amber { background: var(--amber-bg); border-color: var(--amber-border); }
+    .card-icon.red { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+    
+    .card-title {
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+
+    /* 2열 배치 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    /* Timeline 리스트 */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+      margin-top: 24px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--rule);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .tl-item:last-child {
+      margin-bottom: 0;
+    }
+    .tl-dot {
+      position: absolute;
+      left: -25px;
+      top: 7px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 1.5px solid var(--ink-4);
+      z-index: 2;
+    }
+    .tl-dot.blue { border-color: var(--blue); background: var(--blue-bg); }
+    .tl-dot.green { border-color: var(--green); background: var(--green-bg); }
+    .tl-dot.violet { border-color: var(--violet); background: var(--violet-bg); }
+    .tl-dot.amber { border-color: var(--amber); background: var(--amber-bg); }
+
+    .tl-phase {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 3px;
+    }
+    .tl-phase.blue { color: var(--blue); }
+    .tl-phase.green { color: var(--green); }
+    .tl-phase.violet { color: var(--violet); }
+    .tl-phase.amber { color: var(--amber); }
+
+    .tl-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .tl-desc {
+      font-size: 13.5px;
+      color: var(--ink-3);
+      line-height: 1.85;
+    }
+
+    /* 인라인 코드 */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--ink-2);
+    }
+    
+    /* 태그 로우 */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      border: 1px solid var(--rule);
+      color: var(--ink-3);
+      background: var(--white);
+    }
+    .tag.green { border-color: var(--green-border); color: var(--green); background: var(--green-bg); }
+    .tag.blue { border-color: var(--blue-border); color: var(--blue); background: var(--blue-bg); }
+    .tag.violet { border-color: var(--violet-border); color: var(--violet); background: var(--violet-bg); }
+    .tag.amber { border-color: var(--amber-border); color: var(--amber); background: var(--amber-bg); }
+
+    /* Highlight box */
+    .hl-box {
+      border-left: 2.5px solid var(--ink-3);
+      padding: 13px 18px;
+      margin: 16px 0;
+      background: var(--surface);
+      border-radius: 0 8px 8px 0;
+    }
+    .hl-box.violet { border-color: var(--violet); background: var(--violet-bg); }
+    .hl-box.green { border-color: var(--green); background: var(--green-bg); }
+    .hl-box.blue { border-color: var(--blue); background: var(--blue-bg); }
+    .hl-box p { font-size: 13.5px; color: var(--ink-2); line-height: 1.85; }
+
+    /* KPI 그리드 */
+    .kp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .kp-box {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+    .kp-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--ink-4);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .kp-box p {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.7;
+    }
+    
+    /* Footer Pagination */
+    .project-nav-footer {
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 30px;
+      margin-top: 60px;
+    }
+    .project-nav-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .project-nav-link.next { text-align: right; align-items: flex-end; }
+    .nav-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.1em; }
+    .nav-title { font-family: 'Noto Serif KR', serif; font-size: 16px; font-weight: 600; color: var(--ink); transition: color 0.2s; }
+    .project-nav-link:hover .nav-title { color: var(--blue); }
+
+    @media (max-width: 620px) {
+      .page { padding: 0 24px 80px; }
+      .site-nav { padding: 16px 24px; flex-direction: column; gap: 12px; align-items: flex-start; }
+      .nav-links { flex-wrap: wrap; gap: 12px; }
+      .kp-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      .site-nav, .project-nav-footer { display: none !important; }
+      .page { padding: 0 !important; margin: 0 !important; }
+      .section { page-break-inside: avoid; }
+      .card, .ps-box, .purpose-box { page-break-inside: avoid; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 상단 네비게이션바 (Sticky) -->
+  <nav class="site-nav">
+    <a href="index.html">← Back to Overview</a>
+    <div class="nav-links">
+      <a href="#payment">PayGate 연동</a>
+      <a href="#refund">부분 환불 자동화</a>
+      <a href="#operation">운영 스크립트 관리</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    
+    <!-- ══ HEADER ══ -->
+    <header class="site-header fade-up">
+      <div class="eyebrow">Project 03</div>
+      <h1>IABSE Congress Incheon 2026 결제 시스템 구축</h1>
+      <p class="subtitle">
+        단기성 글로벌 컨퍼런스 행사를 위한 <strong>React 기반 SPA 프론트엔드</strong>와 <strong>Node.js/Express.js 기반의 백엔드</strong> 시스템을 통해 글로벌 PG사(PayGate) 트랜잭션 연동 및 이벤트 기간 기반 자동 부분 환불 로직을 설계 및 구현했습니다.
+      </p>
+      <div>
+        <span class="role-chip primary">React</span>
+        <span class="role-chip primary">Node.js</span>
+        <span class="role-chip primary">Express.js</span>
+        <span class="role-chip">PayGate API</span>
+        <span class="role-chip">REST API</span>
+        <span class="role-chip">Cron/Scheduler</span>
+      </div>
+    </header>
+
+    <!-- ══ SECTION 01: PAYGATE ══ -->
+    <section id="payment" class="section fade-up">
+      <div class="section-number">01</div>
+      <h2 class="section-title">글로벌 결제 시스템 (PayGate) 연동 구축</h2>
+      <div class="section-sub">REACT · OPENPAYAPI · TRANSACTION LOGIC</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">🎯 구축 목표</div>
+        <p>국내/해외 참가자가 공존하는 국제 대회 특성상, 사용자의 국가 코드를 식별하여 <strong>국가별(Domestic/International) 가맹점 번호(MID)를 자동 분기 처리</strong>하고 원활한 신용카드 트랜잭션 흐름을 구축하는 것을 최우선으로 삼았습니다.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon blue">💳</div>
+        <div>
+          <div class="card-title">Dynamic MID 분기 라우팅</div>
+          <div class="card-desc">React 단에서 글로벌 유저의 Select 국가 입력 값을 트래킹해, 결제 버튼(`PGIOForm`) Submit 시 국내용 가맹점과 해외용 가맹점 ID(MID)가 동적으로 맵핑되어 PayGate PG 서버 측에 전송되도록 구축했습니다. 이는 사용자의 결제 폼 입력 단계를 줄이고 불필요한 결제 오류를 방어합니다.</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon green">🔗</div>
+        <div>
+          <div class="card-title">OpenPayAPI 컴포넌트 이식 및 검증</div>
+          <div class="card-desc"><code>Step3Payment</code> 컴포넌트에 OpenPayAPI 라이브러리를 React Lifecycle(`useEffect`, Callback 핸들러) 내에서 안정적으로 구동시키고, 콜백 결과물(`getPGIOresult`)을 Node.js 백엔드로 넘겨 서버사이드에서 무결성 이중 검증 구조를 수립했습니다.</div>
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══ SECTION 02: 환불 자동화 ══ -->
+    <section id="refund" class="section fade-up">
+      <div class="section-number">02</div>
+      <h2 class="section-title">일자별 부분 환불 스케줄러 개발</h2>
+      <div class="section-sub">PAYGATE CANCEL API · PARTIAL REFUND ALGORITHM</div>
+
+      <p style="font-size: 14.5px; color: var(--ink-3); line-height: 1.85; margin-bottom: 24px;">행사 특성 상 취소 요청 시점에 따라 위약금 수수료율이 달라집니다. 기존 관리자가 수동으로 위약금을 계산하여 PG사에 취소 요청하던 업무를 프로그래밍하여 스케줄러로 자동화했습니다.</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot violet"></div>
+          <div class="tl-phase violet">Step 01 / Date Calculation</div>
+          <div class="tl-title">이벤트 이벤트 기간 역산 알고리즘</div>
+          <div class="tl-desc">사용자의 환불 요청 시점의 타임스탬프를 행사의 메인 이벤트 Date와 비교하여 &lt;D-90(100%)&gt;, &lt;D-30(50%)&gt; 등의 조건 분기율을 계산하는 로직을 Node 서버에 적용했습니다.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot blue"></div>
+          <div class="tl-phase blue">Step 02 / PayGate Cancel 연동</div>
+          <div class="tl-title">PayGate Cancel API 규격 전송</div>
+          <div class="tl-desc">원결제 트랜잭션의 <code>TID</code>를 참고해 수수료가 차감된 부분 취소액(Partial Amount)을 산출하고 PayGate 취소 API에 POST 요청을 보내어 PG 취소를 단행합니다.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-phase green">Step 03 / ACID Transaction</div>
+          <div class="tl-title">DB 상태 변경 및 이력 기록</div>
+          <div class="tl-desc">결제 취소가 PG사에서 완료(`Success`) Code가 떨어지면 비로소 사내 DB 테이블의 상태값을 업데이트하고 환불 이력을 영구 보존합니다.</div>
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="rule">
+    
+    <!-- ══ SECTION 03: 운영 체계 ══ -->
+    <section id="operation" class="section fade-up">
+      <div class="section-number">03</div>
+      <h2 class="section-title">서버 스케줄링 운영 최적화</h2>
+      <div class="section-sub">OPS ENVIRONMENT · CRON TASKS RESTRICTION</div>
+
+      <div class="hl-box green">
+        <p><strong>Cleanup Scheduler 제어 — </strong> 결제 완료되지 않은 더미 데이터를 지우는 DB Cleanup 크론(Cron) 작업이, 개발/운영 환경에서 동시에 돌며 서로 경합하는 장애를 극복했습니다. Node의 <code>process.env.NODE_ENV</code> 변수를 체크해 오직 <strong>Production 환경 에서만</strong> 클린업 스케줄러가 활성화되도록 제약 구조를 추가했습니다.</p>
+      </div>
+
+      <div class="kp-grid">
+        <div class="kp-box">
+          <div class="kp-label">🗂 SPA & Backend </div>
+          <p>React 프론트엔드와 Node 런타임 간 명확한 API 분리와 역할 분담으로 구축.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">💳 안정적인 결제</div>
+          <p>지역별 동적 MID 라우팅을 통해 사용자 경험 보완 및 승인 통과율 향상.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🤖 업무 자동화</div>
+          <p>관리자 수동 환불 처리 비용을 줄이기 위한 Time-based 자동 부분 환불 로직 탑재.</p>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag blue">React</span>
+        <span class="tag green">Node.js</span>
+        <span class="tag green">Express.js</span>
+        <span class="tag violet">PayGate OpenPayAPI</span>
+        <span class="tag amber">Payment Module</span>
+      </div>
+
+    </section>
+
+    <!-- ══ FOOTER NAV ══ -->
+    <div class="project-nav-footer fade-up">
+      <a href="project-02-seedvdi.html" class="project-nav-link prev">
+        <span class="nav-label">Previous Project (02)</span>
+        <span class="nav-title">SK하이닉스 SeedVDI 신규 구축</span>
+      </a>
+      <a href="index.html" class="project-nav-link next">
+        <span class="nav-label">End of Portfolio</span>
+        <span class="nav-title">메인 페이지로 돌아가기</span>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = `fadeUp 0.6s ease ${i * 0.08}s forwards`;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
