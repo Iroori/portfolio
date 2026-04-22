@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent Builder — Tool Search 기능 개발 — Project 04</title>
+  <meta name="description" content="GPT·Claude 모델 Tool Search 기능을 활용한 노코드 AI Agent 빌더 개발 — 입력 토큰 1/10 절감, 외부 MCP 도구 동적 로딩 구현">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --ink: #0f0f0f;
+      --ink-2: #2e2e2e;
+      --ink-3: #5a5a5a;
+      --ink-4: #9a9a9a;
+      --rule: #e0e0e0;
+      --surface: #f5f5f3;
+      --surface-2: #eeede9;
+      --white: #ffffff;
+
+      --green: #2d6a4f;
+      --green-bg: #edf5f0;
+      --green-border: #b7d9c6;
+
+      --blue: #1a4a7a;
+      --blue-bg: #eef3f9;
+      --blue-border: #b3ccdf;
+
+      --violet: #4a2d7a;
+      --violet-bg: #f2eef9;
+      --violet-border: #ccb7df;
+
+      --red: #7a1a2d;
+      --red-bg: #f9eef0;
+      --red-border: #dfb3bc;
+
+      --amber: #7a5a1a;
+      --amber-bg: #f9f5ee;
+      --amber-border: #dfcfb3;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--ink-2);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 400;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 40px 120px;
+    }
+
+    /* ── NAV ── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      padding: 24px 40px;
+      margin-bottom: 50px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .site-nav a { color: var(--ink-4); text-decoration: none; transition: color 0.2s; }
+    .site-nav a:hover, .site-nav a.active { color: var(--ink); }
+    .nav-links { display: flex; gap: 24px; }
+
+    /* ── UTILITIES ── */
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 18px;
+    }
+
+    hr.rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 68px 0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { opacity: 0; }
+
+    /* ── HEADER ── */
+    .site-header {
+      padding-bottom: 52px;
+      margin-bottom: 72px;
+      animation: fadeUp 0.5s ease 0.05s forwards;
+    }
+    .site-header h1 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+    .site-header .subtitle {
+      font-size: 14.5px;
+      color: var(--ink-3);
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    /* ── CHIPS / TAGS ── */
+    .role-chip {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      color: var(--ink-3);
+      margin: 3px 3px 3px 0;
+    }
+    .role-chip.primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      border: 1px solid var(--rule);
+      color: var(--ink-3);
+      background: var(--white);
+    }
+    .tag.green { border-color: var(--green-border); color: var(--green); background: var(--green-bg); }
+    .tag.blue  { border-color: var(--blue-border);  color: var(--blue);  background: var(--blue-bg); }
+    .tag.violet{ border-color: var(--violet-border);color: var(--violet);background: var(--violet-bg); }
+    .tag.amber { border-color: var(--amber-border); color: var(--amber); background: var(--amber-bg); }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 72px; }
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-4);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(19px, 2.8vw, 25px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: 5px;
+    }
+    .section-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--ink-4);
+      letter-spacing: 0.08em;
+      margin-bottom: 28px;
+    }
+    .subsection-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 32px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── PURPOSE BOX ── */
+    .purpose-box {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin-bottom: 30px;
+    }
+    .purpose-box .box-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      margin-bottom: 10px;
+    }
+    .purpose-box p { font-size: 14px; color: var(--ink-3); line-height: 1.82; }
+
+    /* ── CARD ── */
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+    .card:hover { border-color: var(--ink-4); }
+    .card-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0; margin-top: 1px;
+    }
+    .card-icon.blue   { background: var(--blue-bg);   border-color: var(--blue-border); }
+    .card-icon.green  { background: var(--green-bg);  border-color: var(--green-border); }
+    .card-icon.violet { background: var(--violet-bg); border-color: var(--violet-border); }
+    .card-icon.amber  { background: var(--amber-bg);  border-color: var(--amber-border); }
+    .card-title { font-weight: 500; color: var(--ink); font-size: 14px; margin-bottom: 5px; }
+    .card-desc { font-size: 13px; color: var(--ink-3); line-height: 1.75; }
+
+    /* ── PS BOX ── */
+    .ps-box { border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+    .ps-row { display: flex; align-items: stretch; }
+    .ps-side {
+      width: 70px; flex-shrink: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+      padding: 18px 10px; border-right: 1px solid var(--rule);
+    }
+    .ps-side-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--ink-4);
+    }
+    .ps-row.problem .ps-side { background: var(--red-bg); }
+    .ps-row.solution .ps-side { background: var(--green-bg); }
+    .ps-content {
+      padding: 16px 20px; font-size: 13px;
+      color: var(--ink-3); line-height: 1.75; flex: 1; background: var(--white);
+    }
+    .ps-divider { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      border-radius: 4px; padding: 2px 9px;
+      border: 1px solid var(--red-border);
+      background: var(--red-bg); color: var(--red); font-weight: 600;
+    }
+    .badge.solved { border-color: var(--green-border); background: var(--green-bg); color: var(--green); }
+    .badge.info   { border-color: var(--blue-border);  background: var(--blue-bg);  color: var(--blue); }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 26px; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 6px; top: 10px; bottom: 10px;
+      width: 1px; background: var(--rule);
+    }
+    .tl-item { position: relative; margin-bottom: 26px; }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -23px; top: 6px;
+      width: 9px; height: 9px; border-radius: 50%;
+      border: 2px solid var(--rule); background: var(--white); z-index: 2;
+    }
+    .tl-item.active .tl-dot  { border-color: var(--ink-2); background: var(--ink-2); }
+    .tl-item.accent .tl-dot  { border-color: var(--green); background: var(--green); }
+    .tl-item.warning .tl-dot { border-color: var(--amber); background: var(--amber); }
+    .tl-item.blue .tl-dot    { border-color: var(--blue);  background: var(--blue); }
+    .phase {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-4); margin-bottom: 4px;
+    }
+    .tl-title { font-weight: 500; color: var(--ink); font-size: 14px; margin-bottom: 5px; }
+    .tl-desc { font-size: 13px; color: var(--ink-3); line-height: 1.75; }
+
+    /* ── CODE ── */
+    code, .code-snippet {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: 4px; padding: 1px 6px; color: var(--ink-2);
+    }
+    pre.code-block {
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: 8px; padding: 16px; overflow-x: auto;
+      font-size: 12px; line-height: 1.6; margin: 12px 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── KP GRID ── */
+    .kp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 26px; }
+    @media (max-width: 520px) { .kp-grid { grid-template-columns: 1fr; } }
+    .kp-box {
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: 8px; padding: 16px 18px;
+    }
+    .kp-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      text-transform: uppercase; letter-spacing: 0.13em;
+      color: var(--ink-4); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .kp-box p { font-size: 13px; color: var(--ink-3); line-height: 1.7; }
+
+    /* ── DIAGRAM (Tool Search Flow) ── */
+    .diagram-wrap {
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .diagram-top-bar {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--rule);
+      padding: 10px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-4);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .diagram-body {
+      padding: 28px 24px 20px;
+      background: var(--white);
+    }
+
+    /* Flow diagram nodes */
+    .flow-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+      width: 100%;
+    }
+    .flow-node {
+      border: 1px solid var(--rule);
+      border-radius: 9px;
+      padding: 11px 20px;
+      text-align: center;
+      background: var(--white);
+      min-width: 200px;
+      width: 100%;
+      max-width: 380px;
+    }
+    .flow-node .n-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-4);
+      margin-bottom: 4px;
+    }
+    .flow-node .n-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-2);
+    }
+    .flow-node.blue   { background: var(--blue-bg);   border-color: var(--blue-border);   }
+    .flow-node.green  { background: var(--green-bg);  border-color: var(--green-border);  }
+    .flow-node.violet { background: var(--violet-bg); border-color: var(--violet-border); }
+    .flow-node.amber  { background: var(--amber-bg);  border-color: var(--amber-border);  }
+    .flow-node.blue .n-name   { color: var(--blue); }
+    .flow-node.green .n-name  { color: var(--green); }
+    .flow-node.violet .n-name { color: var(--violet); }
+    .flow-node.amber .n-name  { color: var(--amber); }
+
+    .flow-conn {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1px; margin: 4px 0;
+    }
+    .flow-conn .proto {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-4);
+      background: var(--white); padding: 0 6px;
+      position: relative; z-index: 1;
+    }
+    .flow-conn .arrow { font-size: 13px; color: var(--rule); }
+
+    /* Split branch in diagram */
+    .flow-branch {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      max-width: 560px;
+      margin-top: 4px;
+    }
+    .flow-branch-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 4px; flex: 1;
+    }
+    .flow-branch-divider {
+      width: 1px; background: var(--rule);
+      height: 80px; align-self: center;
+    }
+    .proto-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; text-transform: uppercase;
+      letter-spacing: 0.1em; padding: 3px 9px;
+      border-radius: 4px; border: 1px solid;
+    }
+    .proto-badge.green  { color: var(--green);  border-color: var(--green-border);  background: var(--green-bg); }
+    .proto-badge.blue   { color: var(--blue);   border-color: var(--blue-border);   background: var(--blue-bg); }
+    .proto-badge.violet { color: var(--violet); border-color: var(--violet-border); background: var(--violet-bg); }
+    .proto-badge.amber  { color: var(--amber);  border-color: var(--amber-border);  background: var(--amber-bg); }
+
+    .diagram-note {
+      border-top: 1px solid var(--rule);
+      padding: 14px 24px;
+      background: var(--surface);
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+
+    /* ── COMPARE TABLE ── */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 13px;
+      margin: 20px 0;
+    }
+    .compare-table thead tr {
+      background: var(--surface-2);
+    }
+    .compare-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-4);
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+    }
+    .compare-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:nth-child(even) td { background: var(--surface); }
+    .compare-table td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+
+    /* ── INSIGHT BOX ── */
+    .insight-box {
+      border-left: 3px solid var(--blue-border);
+      background: var(--blue-bg);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.75;
+    }
+    .insight-box .insight-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .insight-box.green {
+      border-left-color: var(--green-border);
+      background: var(--green-bg);
+    }
+    .insight-box.green .insight-label { color: var(--green); }
+    .insight-box.amber {
+      border-left-color: var(--amber-border);
+      background: var(--amber-bg);
+    }
+    .insight-box.amber .insight-label { color: var(--amber); }
+
+    /* ── FOOTER NAV ── */
+    .project-nav-footer {
+      border-top: 1px solid var(--rule);
+      display: flex; justify-content: space-between;
+      align-items: center; padding-top: 30px; margin-top: 60px;
+    }
+    .project-nav-link {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .project-nav-link.next { text-align: right; align-items: flex-end; }
+    .nav-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .nav-title {
+      font-family: 'Noto Serif KR', serif; font-size: 16px;
+      font-weight: 600; color: var(--ink); transition: color 0.2s;
+    }
+    .project-nav-link:hover .nav-title { color: var(--blue); }
+
+    @media (max-width: 620px) {
+      .page { padding: 0 24px 80px; }
+      .site-nav { padding: 16px 24px; flex-direction: column; gap: 12px; align-items: flex-start; }
+      .nav-links { flex-wrap: wrap; gap: 12px; }
+      .flow-branch { flex-direction: column; align-items: center; }
+      .flow-branch-divider { display: none; }
+    }
+
+    @media print {
+      .site-nav, .project-nav-footer { display: none !important; }
+      .page { padding: 0 !important; margin: 0 !important; }
+      .section { page-break-inside: avoid; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ── NAVIGATION ── -->
+  <nav class="site-nav">
+    <a href="index.html">← Back to Overview</a>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#tool-search">Tool Search</a>
+      <a href="#diagram">Diagram</a>
+      <a href="#impl">구현 상세</a>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- ══ HEADER ══ -->
+    <header class="site-header fade-up">
+      <div class="eyebrow">Project 04</div>
+      <h1>AI Agent Builder<br>— Tool Search 기능 개발</h1>
+      <p class="subtitle">
+        논코드(No-Code) 방식으로 AI Agent를 생성하고 운영할 수 있는 자체 애플리케이션 <strong>AI Agent Builder</strong> 내에,
+        외부 MCP 서버 도구를 포함한 대규모 Tool 카탈로그를 효율적으로 탐색·로딩하는 <strong>Tool Search</strong> 기능을 설계·구현했습니다.
+        GPT 계열(gpt-5.4)과 Claude 계열(Opus, Sonnet 4.5+, Haiku 4.5) 각각의 Tool Search 메커니즘 차이를 분석하고,
+        사용자가 모드를 선택할 수 있는 통합 인터페이스를 개발했습니다.
+      </p>
+      <div>
+        <span class="role-chip primary">AI Agent Builder</span>
+        <span class="role-chip primary">Tool Search</span>
+        <span class="role-chip">LangChain</span>
+        <span class="role-chip">MCP Protocol</span>
+        <span class="role-chip">GPT / Claude API</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag green">입력 토큰 ~90% 절감</span>
+        <span class="tag blue">defer_loading: true</span>
+        <span class="tag violet">BM25 / Regex 선택</span>
+        <span class="tag amber">외부 MCP 서버 동적 로딩</span>
+      </div>
+    </header>
+
+    <!-- ══ SECTION 00: OVERVIEW ══ -->
+    <section id="overview" class="section fade-up">
+      <div class="section-number">00</div>
+      <h2 class="section-title">배경 및 문제 인식</h2>
+      <div class="section-sub">CONTEXT · PROBLEM STATEMENT</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">🎯 프로젝트 목적</div>
+        <p>
+          AI Agent Builder는 개발자가 코드를 직접 작성하지 않고도 LangChain 기반 Agent를 구성·배포할 수 있는
+          자체 플랫폼입니다. Agent에 연결되는 Tool의 수가 증가함에 따라 — 특히 외부 MCP 서버의 도구들까지 포함하면
+          수백 개에 달하는 Tool Schema가 매 요청마다 LLM 컨텍스트에 전달되어 <strong>입력 토큰이 폭증</strong>하는
+          문제가 발생했습니다. 이를 해결하기 위해 GPT·Claude 양측의 <strong>Tool Search</strong> 기능을 도입했습니다.
+        </p>
+      </div>
+
+      <div class="ps-box">
+        <div class="ps-row problem">
+          <div class="ps-side"><div class="ps-side-label">Issue</div></div>
+          <div class="ps-content">
+            <span class="badge">Tool Schema 과부하</span><br><br>
+            MCP 서버 3개 이상 연결 시 Tool definition이 <code>context window</code>의 30~40%를 차지.
+            외부 MCP 서버의 도구는 클라이언트 단에서 Tool Schema를 직접 확인할 수 없고,
+            LLM 서버 내부에서 처리되기 때문에 전체 Tool 목록을 매번 주입하는 방식은 비용·성능 양 측면에서 심각한 병목이 되었습니다.
+          </div>
+        </div>
+        <hr class="ps-divider">
+        <div class="ps-row solution">
+          <div class="ps-side"><div class="ps-side-label">✓ 해결</div></div>
+          <div class="ps-content">
+            GPT 계열은 <code>{type: "toolsearch"}</code> 파라미터로, Claude 계열은
+            <code>tool_search_tool_bm25</code> / <code>tool_search_tool_regex</code> 중
+            사용자가 모드를 선택하는 방식으로 Tool Search를 활성화.
+            모든 외부 MCP 도구에 <code>defer_loading: true</code>를 적용하여 실제 필요한 시점에만 동적 로딩하도록 구성했습니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box green">
+        <div class="insight-label">📊 Claude API Log 실측 결과</div>
+        Tool Search 활성화 후 Claude API 로그 탭에서 확인한 결과, 동일 요청 기준 <strong>입력 토큰이 기존 대비 약 1/10 수준</strong>으로 감소했습니다.
+        GPT 계열은 공식 메트릭 노출이 없어 직접 비교는 어렵지만, Tool 컨텍스트 길이 단축 효과는 동일하게 확인되었습니다.
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══ SECTION 01: TOOL SEARCH 원리 ══ -->
+    <section id="tool-search" class="section fade-up">
+      <div class="section-number">01</div>
+      <h2 class="section-title">Tool Search 동작 원리</h2>
+      <div class="section-sub">MECHANISM · COMPARISON · GPT vs CLAUDE</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">💡 핵심 아이디어</div>
+        <p>
+          기존 방식은 모든 Tool Schema를 매 API 호출마다 <code>tools</code> 배열에 담아 전송합니다.
+          Tool Search는 이를 역전시켜, LLM이 먼저 <strong>"어떤 Tool이 필요한지"를 검색</strong>하고
+          — 필요한 Tool만 컨텍스트에 로드하는 <strong>Lazy Loading 전략</strong>입니다.
+          Tool Schema는 LLM 서버 내부 인덱스에 사전 등록되며, 클라이언트는 Schema 전체를 노출하지 않아도 됩니다.
+        </p>
+      </div>
+
+      <!-- GPT vs Claude 비교 -->
+      <div class="subsection-title">1-1. GPT vs Claude — 방식 비교</div>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>GPT (gpt-5.4+)</th>
+            <th>Claude (Opus / Sonnet 4.5+ / Haiku 4.5)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>활성화 방법</td>
+            <td><code>tools</code> 배열에 <code>{type: "toolsearch"}</code> 항목 추가. Model이 자체적으로 호스팅 검색 수행</td>
+            <td><code>tools</code>에 <code>tool_search_tool_bm25</code> 또는 <code>tool_search_tool_regex</code> 추가 후 사용자 선택 모드로 동작</td>
+          </tr>
+          <tr>
+            <td>검색 알고리즘</td>
+            <td>OpenAI 내부 Vector / Embedding 기반 유사도 검색 (공개 미완료)</td>
+            <td>BM25 (자연어 쿼리 의미 기반 랭킹) 또는 Regex (패턴 매칭) 선택 가능</td>
+          </tr>
+          <tr>
+            <td>defer_loading</td>
+            <td><code>defer_loading: true</code>로 개별 Tool 지연 등록. Namespace 단위 권장</td>
+            <td><code>defer_loading: true</code>로 MCP 서버 전체 또는 개별 Tool 지연 등록 가능</td>
+          </tr>
+          <tr>
+            <td>클라이언트 실행 모드</td>
+            <td><code>execution: "client"</code> 설정 시 <code>tool_search_call</code> emit → 앱이 검색 수행 후 결과 반환</td>
+            <td>기본적으로 서버 사이드 실행. 클라이언트 개입 없이 LLM이 tool search 수행</td>
+          </tr>
+          <tr>
+            <td>토큰 절감 효과</td>
+            <td>Tool 수에 따라 60~85% 감소 (OpenAI 공식 수치)</td>
+            <td>실측 기준 입력 토큰 약 <strong>1/10 수준</strong>으로 감소 (Claude API 로그 확인)</td>
+          </tr>
+          <tr>
+            <td>MCP 서버 연동</td>
+            <td>MCP Namespace 단위로 defer_loading 적용 권장</td>
+            <td><code>mcp_servers</code> 배열에 <code>default_config: {defer_loading: true}</code> 설정으로 서버 전체 지연 적용</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- BM25 vs Regex -->
+      <div class="subsection-title">1-2. Claude — BM25 vs Regex 선택 전략</div>
+
+      <div class="card">
+        <div class="card-icon blue">🔍</div>
+        <div>
+          <div class="card-title">BM25 — 자연어 시맨틱 검색</div>
+          <div class="card-desc">
+            <code>tool_search_tool_bm25_20251119</code> 변형. Okapi BM25 랭킹 함수를 사용하여
+            Tool 이름·설명·파라미터 명칭에 대한 자연어 Query 유사도를 계산합니다.
+            "VM 상태 조회해줘"처럼 Tool 이름을 정확히 모르는 경우에 적합하며,
+            100개 이상의 대형 Tool 카탈로그에서 탁월한 성능을 보입니다.
+            AI Agent Builder에서 <strong>기본(Default) 모드</strong>로 설정됩니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon violet">⚡</div>
+        <div>
+          <div class="card-title">Regex — 패턴 기반 정밀 매칭</div>
+          <div class="card-desc">
+            <code>tool_search_tool_regex</code> 변형. Python 정규표현식으로 Tool 이름을 직접 패턴 매칭합니다.
+            Tool 명명 규칙이 구조적(<code>vdi_get_*</code>, <code>vm_action_*</code> 등)이고
+            정확한 이름을 알 때 가장 빠릅니다. 단, 복잡한 Query에서 Character Limit 오류 가능성이 있어
+            소규모 Tool 셋 또는 내부 명명 체계가 명확할 때 사용자 선택 옵션으로 제공합니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box amber">
+        <div class="insight-label">⚠️ 구현 시 유의사항</div>
+        외부 MCP 서버의 Tool들은 클라이언트 단에서 Schema를 직접 열람할 수 없습니다.
+        따라서 Tool Search가 올바른 Tool을 탐색할 수 있도록, MCP 서버의 Tool 등록 단계에서
+        <strong>설명(description)과 파라미터 명칭을 최대한 상세하게 작성</strong>하는 것이 핵심 전제 조건입니다.
+        이 메타데이터가 BM25 또는 Regex 검색의 인덱스로 활용됩니다.
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══ SECTION 02: DIAGRAM ══ -->
+    <section id="diagram" class="section fade-up">
+      <div class="section-number">02</div>
+      <h2 class="section-title">Tool Search 동작 다이어그램</h2>
+      <div class="section-sub">FLOW DIAGRAM · WITHOUT vs WITH TOOL SEARCH</div>
+
+      <!-- Diagram A: 기존 방식 -->
+      <div class="subsection-title">2-1. 기존 방식 — 전체 Tool Schema 주입</div>
+      <div class="diagram-wrap">
+        <div class="diagram-top-bar">
+          <span>Traditional Approach — All Tools in Context</span>
+          <span class="badge">비효율</span>
+        </div>
+        <div class="diagram-body">
+          <div class="flow-col">
+            <div class="flow-node blue">
+              <div class="n-label">Client / Agent Builder</div>
+              <div class="n-name">🧑‍💻 Agent 생성 · 요청 발송</div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↓</div>
+              <div class="proto">tools[] — 전체 Schema 포함 (300~500 Tool)</div>
+            </div>
+            <div class="flow-node amber" style="max-width:380px;">
+              <div class="n-label">LLM API (GPT / Claude)</div>
+              <div class="n-name">📋 전체 Tool Schema 파싱<br>
+                <span style="font-size:11px;color:var(--red);">⚠ 입력 토큰의 40%+ 소진</span>
+              </div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↓</div>
+              <div class="proto">추론 후 Tool 선택</div>
+            </div>
+            <div class="flow-node green">
+              <div class="n-label">Tool Execution</div>
+              <div class="n-name">⚙️ 선택된 Tool 1~3개 실제 실행</div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-note">
+          300개 Tool 기준, <code>tools</code> 배열의 Schema 토큰만으로 <strong>~15,000 토큰</strong>이 소진됩니다.
+          MCP 서버 3개 연결 시 매 호출마다 반복 전송됩니다.
+        </div>
+      </div>
+
+      <!-- Diagram B: Tool Search 적용 -->
+      <div class="subsection-title">2-2. Tool Search 적용 — 동적 Lazy Loading</div>
+      <div class="diagram-wrap">
+        <div class="diagram-top-bar">
+          <span>Tool Search Flow — defer_loading: true</span>
+          <span class="badge solved">~90% 절감</span>
+        </div>
+        <div class="diagram-body">
+          <div class="flow-col">
+            <!-- Step 1 -->
+            <div class="flow-node blue">
+              <div class="n-label">Step 1 · Client</div>
+              <div class="n-name">🧑‍💻 Agent 요청 발송<br>
+                <span style="font-size:11px;color:var(--blue);">tools[] = [tool_search_tool] only</span>
+              </div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↓</div>
+              <div class="proto">최소 페이로드 (Search Tool 정의만 포함)</div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flow-node amber" style="max-width:380px;">
+              <div class="n-label">Step 2 · LLM Server</div>
+              <div class="n-name">🤖 사용자 의도 분석<br>
+                <span style="font-size:11px;color:var(--amber);">→ tool_search(query="VM 상태 조회") 호출</span>
+              </div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↓</div>
+              <div class="proto">BM25 / Regex 인덱스 검색</div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flow-node violet" style="max-width:380px;">
+              <div class="n-label">Step 3 · Tool Registry (LLM 내부)</div>
+              <div class="n-name">🗂 Tool 인덱스 검색<br>
+                <span style="font-size:11px;color:var(--violet);">↳ 관련 Tool Schema 상위 3~5개 반환</span>
+              </div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↓</div>
+              <div class="proto">필요한 Tool Schema만 컨텍스트에 추가</div>
+            </div>
+
+            <!-- Step 4 branch -->
+            <div style="display:flex;justify-content:center;width:100%;margin-bottom:4px;">
+              <div style="height:16px;width:1px;background:var(--rule);"></div>
+            </div>
+            <div class="flow-branch" style="max-width:560px;">
+              <div class="flow-branch-item">
+                <div style="height:12px;width:1px;background:var(--rule);"></div>
+                <div class="proto-badge green">GPT — toolsearch</div>
+                <div style="height:8px;width:1px;background:var(--rule);"></div>
+                <div class="flow-node green" style="width:100%;">
+                  <div class="n-label">Hosted Tool Search</div>
+                  <div class="n-name">Server-Side 검색<br>
+                    <span style="font-size:11px;">defer_loading Tool 자동 로드</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flow-branch-divider"></div>
+              <div class="flow-branch-item">
+                <div style="height:12px;width:1px;background:var(--rule);"></div>
+                <div class="proto-badge violet">Claude — BM25 / Regex</div>
+                <div style="height:8px;width:1px;background:var(--rule);"></div>
+                <div class="flow-node violet" style="width:100%;">
+                  <div class="n-label">Anthropic Tool Search</div>
+                  <div class="n-name">사용자 선택 모드<br>
+                    <span style="font-size:11px;">BM25(시맨틱) or Regex(패턴)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:center;width:100%;margin-top:4px;">
+              <div style="height:16px;width:1px;background:var(--rule);"></div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="flow-node green">
+              <div class="n-label">Step 4 · Tool Execution</div>
+              <div class="n-name">⚙️ 필터링된 Tool 실행 (MCP 포함)<br>
+                <span style="font-size:11px;color:var(--green);">외부 MCP 서버 Tool도 동적 로드</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-note">
+          <strong>핵심 차이:</strong> Tool Schema 전체가 아닌 <code>tool_search_tool</code> 정의 하나만으로 첫 요청을 시작합니다.
+          LLM이 필요한 Tool을 직접 탐색하고, 외부 MCP 서버의 도구도 <code>defer_loading: true</code>로
+          최초 컨텍스트에서 제외한 뒤 쿼리 시점에 로드됩니다.
+          Claude API 로그 기준 <strong>입력 토큰 약 1/10 감소</strong> 실측.
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══ SECTION 03: 구현 상세 ══ -->
+    <section id="impl" class="section fade-up">
+      <div class="section-number">03</div>
+      <h2 class="section-title">구현 상세 — AI Agent Builder 통합</h2>
+      <div class="section-sub">IMPLEMENTATION · LANGCHAIN · MCP INTEGRATION</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">🔧 구현 전략</div>
+        <p>
+          LangChain의 <code>create_agent</code> 기반으로 Agent를 구성하되,
+          Tool 등록 단계에서 GPT / Claude 모델별 Tool Search 파라미터를 자동 분기하여 주입합니다.
+          Agent Builder UI에서는 모델 선택 시 Claude 계열인 경우 BM25/Regex 모드 선택 UI가 동적으로 노출됩니다.
+        </p>
+      </div>
+
+      <!-- 구현 타임라인 -->
+      <div class="subsection-title">3-1. 구현 단계</div>
+      <div class="timeline">
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="phase">Phase 1 · Tool Registry</div>
+          <div class="tl-title">MCP 서버 Tool 등록 및 defer_loading 설정</div>
+          <div class="tl-desc">
+            Agent Builder에서 MCP 서버를 연결할 때, 모든 외부 Tool에
+            <code>defer_loading: true</code>를 기본 적용합니다.
+            사용 빈도가 높은 핵심 Tool (상위 3~5개)만 <code>defer_loading: false</code> 예외 처리하여
+            검색 Round-trip 지연 없이 즉시 사용 가능하도록 구성합니다.
+          </div>
+        </div>
+        <div class="tl-item blue">
+          <div class="tl-dot"></div>
+          <div class="phase">Phase 2 · Model Branching</div>
+          <div class="tl-title">GPT / Claude 모델별 Tool Search 파라미터 분기</div>
+          <div class="tl-desc">
+            GPT 계열: <code>tools</code> 배열에 <code>{type: "toolsearch"}</code> 항목 자동 삽입.<br>
+            Claude 계열: Builder UI의 Search Mode 설정(BM25 or Regex)에 따라
+            <code>tool_search_tool_bm25_20251119</code> 또는 <code>tool_search_tool_regex</code>를
+            <code>tools</code> 배열에 추가하고, MCP 서버에 <code>default_config: {defer_loading: true}</code> 적용.
+          </div>
+        </div>
+        <div class="tl-item accent">
+          <div class="tl-dot"></div>
+          <div class="phase">Phase 3 · LangChain Integration</div>
+          <div class="tl-title">create_agent 래퍼에서 Tool Search 자동 처리</div>
+          <div class="tl-desc">
+            LangChain <code>create_agent</code> 호출 시, 모델 공급사 및 선택 모드를 파악하여
+            Tool Search 설정을 자동 인젝션하는 래퍼 레이어를 구현했습니다.
+            Agent 개발자(사용자)는 별도 코드 없이 Builder UI에서 토글만으로 Tool Search를 활성화할 수 있습니다.
+          </div>
+        </div>
+        <div class="tl-item accent">
+          <div class="tl-dot"></div>
+          <div class="phase">Phase 4 · Verification</div>
+          <div class="tl-title">Claude API 로그 탭에서 입력 토큰 변화 실측</div>
+          <div class="tl-desc">
+            동일 요청(MCP 서버 2개, Tool ~80개 기준)에 대한 Tool Search 전·후
+            입력 토큰을 Claude API 로그 탭에서 비교 확인.
+            <strong>Tool Search 활성화 후 입력 토큰 약 1/10 수준으로 감소</strong> 실측.
+            GPT는 공식 메트릭 노출 인터페이스가 없어 간접 측정으로 대체했습니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 코드 예시 -->
+      <div class="subsection-title">3-2. 핵심 설정 코드 예시</div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-icon violet">📄</div>
+        <div>
+          <div class="card-title">Claude — BM25 Tool Search + MCP defer_loading</div>
+          <div class="card-desc">
+<pre class="code-block"># Claude Sonnet 4.5+ / Haiku 4.5 / Opus 기준
+tools = [
+    {
+        "type": "tool_search_tool_bm25_20251119"  # BM25 모드
+        # Regex 모드: "tool_search_tool_regex"
+    }
+]
+
+mcp_servers = [
+    {
+        "mcp_server_name": "vdi-mcp-server",
+        "default_config": {
+            "defer_loading": True   # 전체 Tool 지연 로딩
+        }
+    }
+]
+
+# beta header 필요
+headers = {
+    "anthropic-beta": "mcp-client-2025-11-20"
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon blue">📄</div>
+        <div>
+          <div class="card-title">GPT — toolsearch 타입 + defer_loading</div>
+          <div class="card-desc">
+<pre class="code-block"># GPT-5.4+ 기준
+tools = [
+    {
+        "type": "toolsearch"    # Tool Search 활성화
+    },
+    {
+        "type": "function",
+        "function": { ... },
+        "defer_loading": True   # 개별 Tool 지연 로딩
+    }
+]
+# MCP Namespace 단위 defer_loading 권장
+# execution: "client" 설정 시 클라이언트가 직접 검색 수행도 가능</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══ SECTION 04: KEY POINTS ══ -->
+    <section class="section fade-up">
+      <div class="section-number">04</div>
+      <h2 class="section-title">핵심 성과 및 기술 포인트</h2>
+      <div class="section-sub">KEY RESULTS · TECHNICAL HIGHLIGHTS</div>
+
+      <div class="kp-grid">
+        <div class="kp-box">
+          <div class="kp-label">📉 입력 토큰 절감</div>
+          <p>Claude 계열 Tool Search 활성화 후 API 로그 기준 <strong>입력 토큰 약 1/10 수준</strong>으로 감소.
+          MCP 도구 포함 대규모 Tool 카탈로그에서 비용 및 응답 품질 동시 개선.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🔄 외부 MCP 동적 로딩</div>
+          <p>클라이언트에서 Schema를 직접 볼 수 없는 외부 MCP 서버 도구도
+          <code>defer_loading: true</code>로 LLM 서버 내부에서 동적 탐색·로딩 실현.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🎛 사용자 선택 모드</div>
+          <p>Claude 계열에서 <strong>BM25(시맨틱 자연어)</strong>와 <strong>Regex(패턴 정밀 매칭)</strong>를
+          Agent Builder UI에서 모드 전환으로 선택 가능. 사용 케이스에 따라 최적 전략 선택.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🤖 모델 자동 분기</div>
+          <p>GPT 계열(<code>toolsearch</code> type)과 Claude 계열(BM25/Regex)의 API 차이를 추상화.
+          LangChain <code>create_agent</code> 래퍼가 모델에 따라 Tool Search 설정을 자동 분기·주입.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">🏗 No-Code Agent Builder</div>
+          <p>개발자가 코드 수정 없이 UI 토글만으로 Tool Search 활성화·모드 전환 가능.
+          Tool 등록부터 MCP 연결, Search 모드 설정까지 완전 GUI 기반.</p>
+        </div>
+        <div class="kp-box">
+          <div class="kp-label">📚 메타데이터 품질 기준</div>
+          <p>BM25·Regex 검색 정확도는 Tool description 품질에 직결됨을 확인.
+          MCP 서버 Tool 설명 작성 가이드라인을 팀 내 표준으로 수립하여 탐색 정밀도 확보.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FOOTER NAV ══ -->
+    <nav class="project-nav-footer">
+      <a href="project-03-iabse.html" class="project-nav-link" style="text-decoration:none;">
+        <span class="nav-label">← Previous</span>
+        <span class="nav-title">IABSE 결제 시스템</span>
+      </a>
+      <a href="index.html" class="project-nav-link next" style="text-decoration:none;">
+        <span class="nav-label">Home</span>
+        <span class="nav-title">Overview →</span>
+      </a>
+    </nav>
+
+  </div><!-- /page -->
+
+  <script>
+    // Fade-up animation observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = `fadeUp 0.6s ease ${i * 0.08}s forwards`;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Active nav highlight on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const scrollSpy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('active'));
+          const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(s => scrollSpy.observe(s));
+  </script>
+</body>
+
+</html>
