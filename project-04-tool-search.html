@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Agent Builder — Tool Search 기능 개발 — Project 04</title>
-  <meta name="description" content="GPT·Claude 모델 Tool Search 기능을 활용한 노코드 AI Agent 빌더 개발 — 입력 토큰 1/10 절감, 외부 MCP 도구 동적 로딩 구현">
+  <title>AI Agent Admin Console — 에이전트 통합 관리 플랫폼 — Project 04</title>
+  <meta name="description" content="GPT·Claude 모델 기반 No-Code AI Agent 관리 플랫폼 — Multi-Agent, MCP 연동, Tool Search, Context 관리, Agent Scheduler">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -552,10 +552,10 @@
   <nav class="site-nav">
     <a href="index.html">← Back to Overview</a>
     <div class="nav-links">
-      <a href="#overview">Overview</a>
+      <a href="#platform">Platform</a>
       <a href="#tool-search">Tool Search</a>
       <a href="#diagram">Diagram</a>
-      <a href="#impl">구현 상세</a>
+      <a href="#impl">구현</a>
     </div>
   </nav>
 
@@ -564,27 +564,128 @@
     <!-- ══ HEADER ══ -->
     <header class="site-header fade-up">
       <div class="eyebrow">Project 04</div>
-      <h1>AI Agent Builder<br>— Tool Search 기능 개발</h1>
+      <h1>AI Agent Admin Console<br>— 에이전트 통합 관리 플랫폼</h1>
       <p class="subtitle">
-        논코드(No-Code) 방식으로 AI Agent를 생성하고 운영할 수 있는 자체 애플리케이션 <strong>AI Agent Builder</strong> 내에,
-        외부 MCP 서버 도구를 포함한 대규모 Tool 카탈로그를 효율적으로 탐색·로딩하는 <strong>Tool Search</strong> 기능을 설계·구현했습니다.
-        GPT 계열(gpt-5.4)과 Claude 계열(Opus, Sonnet 4.5+, Haiku 4.5) 각각의 Tool Search 메커니즘 차이를 분석하고,
-        사용자가 모드를 선택할 수 있는 통합 인터페이스를 개발했습니다.
+        GPT·Claude 등 다양한 LLM을 기반으로 <strong>No-Code로 AI Agent를 생성·배포·관리</strong>할 수 있는 통합 에이전트 어드민 콘솔입니다.
+        React + Node.js 프론트 / Java·Spring튰 백엔드로 구성되며, LangChain <code>create_agent</code>(ReAct) 기반으로
+        <strong>Main Agent(오케스트레이터) + Sub-Agents(툴 바인딩)</strong> 구조를 지원하고,
+        외부 MCP 서버(SSE, stdio), Agent Scheduler, Tool Search 등 에이전튱한 기능을 플랫폼 비질로 제공합니다.
+        VDI AI 솔루션은 이 Admin Console로 구축한 특화 Agent 사례입니다.
       </p>
       <div>
-        <span class="role-chip primary">AI Agent Builder</span>
+        <span class="role-chip primary">Admin Console</span>
+        <span class="role-chip primary">Multi-Agent</span>
         <span class="role-chip primary">Tool Search</span>
+        <span class="role-chip">React + Node.js</span>
+        <span class="role-chip">Java / Spring</span>
         <span class="role-chip">LangChain</span>
         <span class="role-chip">MCP Protocol</span>
-        <span class="role-chip">GPT / Claude API</span>
       </div>
       <div class="tag-row">
-        <span class="tag green">입력 토큰 ~90% 절감</span>
-        <span class="tag blue">defer_loading: true</span>
-        <span class="tag violet">BM25 / Regex 선택</span>
-        <span class="tag amber">외부 MCP 서버 동적 로딩</span>
+        <span class="tag green">No-Code Agent 생성</span>
+        <span class="tag blue">Multi-Agent (Main + Sub)</span>
+        <span class="tag violet">Tool Search 입력토큰 ~90% 절감</span>
+        <span class="tag amber">Agent Scheduler</span>
+        <span class="tag">Keycloak SSO</span>
+        <span class="tag">External MCP (SSE)</span>
       </div>
     </header>
+
+    <!-- ══ SECTION 00: PLATFORM ARCHITECTURE ══ -->
+    <section id="platform" class="section fade-up">
+      <div class="section-number">00</div>
+      <h2 class="section-title">AI Agent Admin Console 플랫폼 아키텍처</h2>
+      <div class="section-sub">PLATFORM OVERVIEW · TECH STACK · ARCHITECTURE</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">🎯 플랫폼 목적</div>
+        <p>개발자가 코드를 작성하지 않고도 UI Config만으로 AI Agent를 생성·설정·실행할 수 있는 통합 관리 플랫폼입니다.
+          VDI AI Agent는 이 콘솔로 만든 특화 Agent 사례이며, 동일한 플랭폼에서 다양한 비즈니스 도메인의 Agent를 구축할 수 있습니다.</p>
+      </div>
+
+      <!-- Platform Tech Stack -->
+      <div class="diagram-wrap">
+        <div class="diagram-top-bar">
+          <span>Platform Architecture Overview</span>
+          <span style="font-size:9.5px;">🔐 Keycloak SSO — 전체 서버 공통 인증</span>
+        </div>
+        <div class="diagram-body">
+          <div class="flow-col">
+            <!-- Frontend -->
+            <div class="flow-node blue" style="max-width:380px;padding:14px 22px;">
+              <div class="n-label">Frontend · Admin Console UI</div>
+              <div class="n-name">🖥 React + Node.js<br>
+                <span style="font-size:11px;color:var(--blue);">Agent 생성·설정 UI / 대화 인터페이스 / Scheduler UI</span>
+              </div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↕</div>
+              <div class="proto">REST API + WebSocket</div>
+            </div>
+            <!-- Backend -->
+            <div class="flow-node amber" style="max-width:380px;padding:14px 22px;">
+              <div class="n-label">Backend · Admin Console Server</div>
+              <div class="n-name">☕ Java / Spring Framework / Tomcat<br>
+                <span style="font-size:11px;color:var(--amber);">Agent 정보 DB 저장 · Agent 생성 API · Scheduler 엔진</span>
+              </div>
+            </div>
+            <div class="flow-conn">
+              <div class="arrow">↕</div>
+              <div class="proto">SDK + WebSocket (대화 고유 ID)</div>
+            </div>
+            <!-- AI Agent Server -->
+            <div class="flow-node green" style="max-width:380px;padding:14px 22px;">
+              <div class="n-label">AI Agent Server · Python</div>
+              <div class="n-name">🐍 LangChain <code style="font-size:11px;color:var(--green);">create_agent</code> · ReAct<br>
+                <span style="font-size:11px;color:var(--green);">Main Agent + Sub-Agents (툴 바인딩) · External MCP (SSE)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-note">
+          사용자가 Admin Console UI에서 Agent를 설정하면 정보가 DB에 저장됩니다.
+          대화 시작 시 <strong>SDK + WebSocket(고유 대화 ID)</strong>를 통해 Python AI Agent 서버와 연결하고,
+          LangChain <code>create_agent</code>(ReAct)로 실행됩니다. <code>Keycloak SSO</code>가 모든 서버에 공통 인증을 적용합니다.
+        </div>
+      </div>
+
+      <!-- Key Platform Features -->
+      <div class="subsection-title">0-1. 플랫폼 핵심 기능</div>
+
+      <div class="card">
+        <div class="card-icon blue">🤖</div>
+        <div>
+          <div class="card-title">No-Code Agent 생성 — Config UI 기반</div>
+          <div class="card-desc">모델 선택(GPT·Claude·등), 시스템 프롬프트, Tool 연결, MCP 서버 연동, 성능 파라미터까지 UI에서 설정하면 코드 직접 작성 없이 Agent가 생성됩니다. Agent ID를 DB에 저장하고 SDK로 여러 클라이언트에서 호출 가능합니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon green">🔗</div>
+        <div>
+          <div class="card-title">Multi-Agent — Main + Sub-Agent Tool 바인딩</div>
+          <div class="card-desc">독립 Sub-Agent를 Main Agent의 Tool로 등록하는 Multi-Agent 구조를 지원합니다. Sub-Agent도 <code>create_agent</code>로 만든 독립적인 Agent입니다. Admin Console에서 <code>type: sub</code>로 설정하면 Main의 Tool로 바인딩되어 ReAct 루프 내에서 호출됩니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon amber">⏰</div>
+        <div>
+          <div class="card-title">Agent Scheduler — 스케줄 기반 자동 실행</div>
+          <div class="card-desc">Cron 및 이벤트 기반으로 Agent를 자동 실행하는 스케줄러 기능을 제공합니다. 정해진 시간에 VDI 인프라 상태 보고서를 자동 생성하거나 주기적 자원 상태 점검 등 에이전튱한 자동화를 실현합니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon violet">🔌</div>
+        <div>
+          <div class="card-title">외부 MCP 서버 연동 — SSE / stdio</div>
+          <div class="card-desc">SSE(Server-Sent Events)나 stdio 방식의 외부 MCP 서버를 UI에서 등록하고 Agent에 연결할 수 있습니다. VDI·vCenter 데이터를 제공하는 Java/Spring AI MCP 서버(SSE)도 이 연동을 통해 Agent에 연결됩니다. <code>defer_loading: true</code>로 선택적 Tool 로드도 지원합니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
 
     <!-- ══ SECTION 00: OVERVIEW ══ -->
     <section id="overview" class="section fade-up">

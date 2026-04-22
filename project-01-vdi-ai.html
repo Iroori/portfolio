@@ -672,6 +672,7 @@
     <div class="nav-links">
       <a href="#overview">Overview</a>
       <a href="#ai-agent">AI Agent</a>
+      <a href="#multi-agent">Multi-Agent</a>
       <a href="#vcompute">vCompute</a>
       <a href="#api-server">API Server</a>
     </div>
@@ -706,59 +707,87 @@
       <div class="section-sub">SYSTEM ARCHITECTURE · FLOW</div>
 
       <div class="arch-wrap">
-        <div class="arch-top-bar">Overall System Flow</div>
+        <div class="arch-top-bar" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>VDI AI Agent — Overall System Architecture</span>
+          <span style="font-size:9.5px;color:var(--ink-4);">🔐 Keycloak SSO — 전체 서버 공통 인증</span>
+        </div>
         <div class="arch-diagram">
-          <div class="arch-node blue" style="min-width:200px;">
-            <div class="n-label">Client</div>
-            <div class="n-name">👤 사용자 / 관리자 (Web)</div>
+
+          <!-- Layer 1: Admin Console -->
+          <div class="arch-node blue" style="min-width:260px;padding:14px 22px;">
+            <div class="n-label">Platform · Admin Console</div>
+            <div class="n-name">🖥 AI Agent Admin Console<br>
+              <span style="font-size:11px;color:var(--blue);">React + Node.js · Java / Spring · Tomcat</span>
+            </div>
           </div>
           <div class="arch-conn">
             <div class="arrow">↕</div>
-            <div class="proto">REST API (HTTP)</div>
+            <div class="proto">SDK + WebSocket (대화 고유 ID)</div>
           </div>
-          <div class="arch-node amber" style="min-width:240px;padding:14px 22px;">
-            <div class="n-label">Core · Orchestrator</div>
-            <div class="n-name">☕ Java / Spring Boot (Tomcat)<br>
-              <span style="font-size:11px;color:var(--amber);">통합 API 서버 · 인증(SSO·JWT)</span>
+
+          <!-- Layer 2: AI Agent Server -->
+          <div class="arch-node green" style="min-width:280px;padding:14px 22px;">
+            <div class="n-label">AI Layer · Python Agent Server</div>
+            <div class="n-name">🐍 LangChain <code style="font-size:11px;color:var(--green);">create_agent</code> · ReAct<br>
+              <span style="font-size:11px;color:var(--green);">Main Agent (Orchestrator) + Sub-Agents (툴 바인딩)</span>
             </div>
           </div>
+
+          <!-- branch from Agent Server -->
           <div style="display:flex;justify-content:center;width:100%;margin:0;">
-            <div style="height:20px;width:1px;background:var(--rule);"></div>
+            <div style="height:16px;width:1px;background:var(--rule);"></div>
           </div>
-          <div style="display:flex;width:100%;max-width:480px;position:relative;margin-bottom:0;">
+          <div style="display:flex;width:100%;max-width:500px;position:relative;margin-bottom:0;">
             <div style="position:absolute;top:0;left:50%;width:200px;height:1px;background:var(--rule);transform:translateX(-100%);"></div>
             <div style="position:absolute;top:0;left:50%;width:200px;height:1px;background:var(--rule);"></div>
           </div>
-          <div class="arch-branch" style="margin-top:0;width:100%;max-width:500px;">
+
+          <div class="arch-branch" style="margin-top:0;width:100%;max-width:520px;">
+            <!-- MCP SSE left -->
             <div class="arch-branch-item">
               <div style="height:20px;width:1px;background:var(--rule);"></div>
-              <div class="proto-badge green">MCP Protocol</div>
+              <div class="proto-badge amber">External MCP (SSE)</div>
               <div style="height:8px;width:1px;background:var(--rule);"></div>
-              <div class="arch-node green" style="width:100%;">
-                <div class="n-label">AI Layer</div>
-                <div class="n-name">🐍 Python Multi-Agent<br>
-                  <span style="font-size:11px;color:var(--green);">LangGraph · Auto-Compact</span>
+              <div class="arch-node amber" style="width:100%;">
+                <div class="n-label">MCP Data Server</div>
+                <div class="n-name">☕ Java / Spring AI MCP<br>
+                  <span style="font-size:11px;color:var(--amber);">VDI·vCenter 데이터 제공 (SSE)</span>
                 </div>
               </div>
-            </div>
-            <div class="arch-branch-divider"></div>
-            <div class="arch-branch-item">
-              <div style="height:20px;width:1px;background:var(--rule);"></div>
-              <div class="proto-badge violet">Retrofit (REST)</div>
-              <div style="height:8px;width:1px;background:var(--rule);"></div>
+              <div style="height:10px;width:1px;background:var(--rule);"></div>
               <div class="arch-node violet" style="width:100%;">
                 <div class="n-label">Infra Engine</div>
                 <div class="n-name">⚙️ C# vCompute<br>
-                  <span style="font-size:11px;color:var(--violet);">VMware vCenter SDK 수집 배치</span>
+                  <span style="font-size:11px;color:var(--violet);">VMware vCenter SDK 수집</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="arch-branch-divider" style="height:120px;"></div>
+
+            <!-- REST API right -->
+            <div class="arch-branch-item">
+              <div style="height:20px;width:1px;background:var(--rule);"></div>
+              <div class="proto-badge blue">REST API</div>
+              <div style="height:8px;width:1px;background:var(--rule);"></div>
+              <div class="arch-node blue" style="width:100%;">
+                <div class="n-label">Business API Server</div>
+                <div class="n-name">☕ Java / Spring Boot<br>
+                  <span style="font-size:11px;color:var(--blue);">통합 API · Business Logic</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="arch-note">
-          <strong>역할 요약:</strong> 사용자 Web 요청은 <code>REST API</code>로 Java 서버가 수신합니다. 
-          Java 엔진은 <code>MCP</code> 프로토콜을 통신 브리지로 사용하여 AI Agent에게 자원 제어 요청을 위임하며, 
-          인프라 이벤트/태스크 데이터 통계 등은 <code>Retrofit</code> 인터페이스를 통하여 C# vCompute 파이프라인에서 수집해 옵니다.
+          <strong>아키텍처 요약:</strong>
+          <strong>AI Agent Admin Console</strong>에서 VDI Agent를 설정·저장(DB)하면,
+          <code>SDK + WebSocket</code>으로 Python AI Agent 서버와 연결됩니다.
+          Agent는 LangChain <code>create_agent</code>(ReAct) 기반이며,
+          <strong>Main Agent(오케스트레이터)</strong>가 독립 에이전트인 <strong>Sub-Agent들을 Tool로 바인딩</strong>한 Multi-Agent 구조로 동작합니다.
+          VDI·vCenter 데이터는 <strong>외부 MCP 서버(Java/Spring AI, SSE)</strong>가 제공하며,
+          해당 서버에 C# vCompute가 수집한 인프라 데이터를 공급합니다.
+          <code>Keycloak SSO</code>가 모든 서버에 공통 인증을 적용합니다.
         </div>
       </div>
     </section>
@@ -773,11 +802,53 @@
 
       <div class="purpose-box">
         <div class="box-eyebrow">🎯 설계 핵심</div>
-        <p>단순한 질의 응답을 넘어선 실질적인 자원 관리 에이전트를 목표로 개발했습니다.
-          LangChain은 GPT·Claude 등 각 LLM 공급사의 ChatModel을 공통 인터페이스로 감싸는 래퍼를 제공하며,
-          이 ChatModel 래퍼의 파라미터를 통해 모델이 지원하는 경우 <strong>병렬 Tool 호출</strong>이 가능합니다.
-          직렬·병렬 호출 여부를 Config 값 하나로 전환할 수 있도록 추상화했으며,
-          장기 대화의 토큰 한계(Context Window)를 극복하기 위해 <strong>모델별 컨텍스트 레지스트리</strong> 및 <strong>Auto-Compact (이력 자동 압축)</strong> 메커니즘을 적용했습니다.</p>
+        <p>AI Agent Admin Console 플랫폼 위에서 VDI 도메인 특화 에이전트를 구축했습니다.
+          LangChain <code>create_agent</code>(ReAct)로 에이전트를 구성하며,
+          <strong>Main Agent(오케스트레이터)</strong>가 독립 에이전트인 <strong>Sub-Agent들을 Tool로 바인딩</strong>하는
+          Multi-Agent 구조를 채택했습니다. LangChain이 각 LLM ChatModel을 감싸는 래퍼를 통해
+          <strong>병렬 Tool 호출</strong>을 Config 하나로 제어하고,
+          장기 대화의 Context Window 한계를 <strong>모델별 컨텍스트 레지스트리</strong> 및
+          <strong>Auto-Compact (이력 자동 압축)</strong>으로 극복했습니다.</p>
+      </div>
+
+      <!-- Multi-Agent 구조 -->
+      <div id="multi-agent" class="subsection-title">1-0. Multi-Agent 아키텍처 — Main(오케스트레이터) + Sub-Agents</div>
+
+      <div class="card">
+        <div class="card-icon green">🤖</div>
+        <div>
+          <div class="card-title">독립 에이전트를 Tool로 바인딩하는 Multi-Agent 구조</div>
+          <div class="card-desc">
+            Admin Console에서 에이전트를 생성할 때 <code>type: main</code> 또는 <code>type: sub</code>를 설정합니다.
+            Sub-Agent는 Main과 동일한 독립 에이전트이며, 단지 <strong>Main Agent의 Tool 목록에 바인딩</strong>되어
+            LangChain ReAct 루프 안에서 호출됩니다.<br><br>
+            VDI AI 에이전트는 <strong>Main(VDI 오케스트레이터)</strong>이 사용자 의도를 파악하고,
+            VM 상태 분석·자원 보고서·인프라 진단·향후 조치 등을 담당하는
+            <strong>Sub-Agent들에게 위임</strong>하는 방식으로 역할을 분산했습니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="ps-box" style="margin-top:12px;">
+        <div class="ps-row problem">
+          <div class="ps-side"><div class="ps-side-label">Why</div></div>
+          <div class="ps-content">
+            <span class="badge">단일 Agent의 컨텍스트·역할 과부하</span><br><br>
+            VDI 관련 요청은 <em>자원 조회, 장애 진단, 보고서 생성, 인프라 조치</em> 등 성격이 다른 태스크가 혼재합니다.
+            단일 Agent에 모든 Tool과 지시를 넣으면 컨텍스트가 폭증하고 LLM의 선택 정밀도가 저하됩니다.
+          </div>
+        </div>
+        <hr class="ps-divider">
+        <div class="ps-row solution">
+          <div class="ps-side"><div class="ps-side-label">✓ 해결</div></div>
+          <div class="ps-content">
+            <span class="badge solved">역할별 Sub-Agent 분리 → Tool 바인딩</span><br><br>
+            도메인별로 독립 Sub-Agent를 별도 생성하고 Main Agent의 Tool로 등록했습니다.
+            Main은 사용자 의도만 파악해 적절한 Sub-Agent를 호출하고,
+            Sub-Agent는 자신의 역할에 특화된 Tool과 시스템 프롬프트로 깊이 있는 처리를 수행합니다.
+            각 Sub-Agent도 Admin Console에서 독립적으로 관리·버전 관리됩니다.
+          </div>
+        </div>
       </div>
 
       <!-- 1-1. 병렬 처리 구조 -->
