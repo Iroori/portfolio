@@ -10,450 +10,18 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet">
-  <style>
-    :root {
-      --ink: #0f0f0f;
-      --ink-2: #2e2e2e;
-      --ink-3: #5a5a5a;
-      --ink-4: #9a9a9a;
-      --rule: #e0e0e0;
-      --surface: #f5f5f3;
-      --surface-2: #eeede9;
-      --white: #ffffff;
-
-      --green: #2d6a4f;
-      --green-bg: #edf5f0;
-      --green-border: #b7d9c6;
-
-      --blue: #1a4a7a;
-      --blue-bg: #eef3f9;
-      --blue-border: #b3ccdf;
-
-      --violet: #4a2d7a;
-      --violet-bg: #f2eef9;
-      --violet-border: #ccb7df;
-
-      --red: #7a1a2d;
-      --red-bg: #f9eef0;
-      --red-border: #dfb3bc;
-
-      --amber: #7a5a1a;
-      --amber-bg: #f9f5ee;
-      --amber-border: #dfcfb3;
-    }
-
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background: var(--white);
-      color: var(--ink-2);
-      font-family: 'Noto Sans KR', sans-serif;
-      font-weight: 400;
-      line-height: 1.75;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 80px 40px 120px;
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .fade-up {
-      opacity: 0;
-    }
-
-    /* ── HEADER ── */
-    .site-header {
-      padding-bottom: 52px;
-      margin-bottom: 72px;
-      animation: fadeUp 0.5s ease 0.05s forwards;
-      opacity: 0;
-      border-bottom: 1px solid var(--rule);
-    }
-
-    .eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--ink-4);
-      margin-bottom: 18px;
-    }
-
-    .site-header h1 {
-      font-family: 'Noto Serif KR', serif;
-      font-size: clamp(28px, 5vw, 42px);
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1.2;
-      margin-bottom: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .site-header .subtitle {
-      font-size: 15px;
-      color: var(--ink-3);
-      max-width: 600px;
-      line-height: 1.8;
-      margin-bottom: 24px;
-    }
-
-    .contact-links {
-      display: flex;
-      gap: 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-    }
-
-    .contact-links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--ink-2);
-      border-bottom: 1px solid transparent;
-      padding-bottom: 2px;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .contact-links a:hover {
-      color: var(--blue);
-      border-color: var(--blue);
-    }
-
-    /* ── SECTION HEADER ── */
-    .section {
-      margin-bottom: 80px;
-    }
-
-    .section-number {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--ink-4);
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-    }
-
-    .section-title {
-      font-family: 'Noto Serif KR', serif;
-      font-size: clamp(22px, 3vw, 28px);
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1.35;
-      margin-bottom: 5px;
-    }
-
-    .section-sub {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px;
-      color: var(--ink-4);
-      letter-spacing: 0.08em;
-      margin-bottom: 32px;
-      text-transform: uppercase;
-    }
-
-    /* ── CAREER TIMELINE ── */
-    .career-list {
-      position: relative;
-      padding-left: 26px;
-    }
-
-    .career-list::before {
-      content: '';
-      position: absolute;
-      left: 6px;
-      top: 10px;
-      bottom: 10px;
-      width: 1px;
-      background: var(--rule);
-    }
-
-    .career-item {
-      position: relative;
-      margin-bottom: 36px;
-    }
-
-    .career-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .career-dot {
-      position: absolute;
-      left: -23px;
-      top: 8px;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      border: 2px solid var(--rule);
-      background: var(--white);
-    }
-
-    .career-item:first-child .career-dot {
-      border-color: var(--blue);
-      background: var(--blue);
-    }
-
-    .career-period {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--ink-4);
-      margin-bottom: 4px;
-      letter-spacing: 0.05em;
-    }
-
-    .career-title {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 6px;
-    }
-
-    .career-desc {
-      font-size: 14px;
-      color: var(--ink-3);
-      line-height: 1.7;
-      margin-bottom: 12px;
-    }
-
-    .career-tasks {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .career-tasks li {
-      font-size: 13.5px;
-      color: var(--ink-2);
-      line-height: 1.7;
-      margin-bottom: 8px;
-      position: relative;
-      padding-left: 14px;
-    }
-
-    .career-tasks li::before {
-      content: '·';
-      position: absolute;
-      left: 0;
-      top: 0;
-      color: var(--ink-4);
-      font-weight: bold;
-    }
-
-    .career-tasks strong {
-      font-weight: 600;
-      color: var(--ink);
-    }
-
-    /* ── SKILLS ── */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 24px;
-    }
-
-    .skill-group-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink-4);
-      margin-bottom: 12px;
-      border-bottom: 1px solid var(--rule);
-      padding-bottom: 6px;
-    }
-
-    .skill-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .skill-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 4px;
-      background: var(--surface);
-      border: 1px solid var(--rule);
-      color: var(--ink-2);
-    }
-
-    /* ── PROJECT CARDS ── */
-    .project-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .project-card {
-      display: block;
-      padding: 28px;
-      border: 1px solid var(--rule);
-      border-radius: 12px;
-      background: var(--white);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    .project-card:hover {
-      border-color: var(--ink-4);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-    }
-
-    .project-card-arrow {
-      position: absolute;
-      right: 28px;
-      top: 28px;
-      color: var(--ink-4);
-      font-size: 20px;
-      transition: transform 0.2s, color 0.2s;
-    }
-
-    .project-card:hover .project-card-arrow {
-      transform: translateX(4px);
-      color: var(--blue);
-    }
-
-    .project-card-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--ink-4);
-      margin-bottom: 8px;
-      display: inline-block;
-      letter-spacing: 0.1em;
-    }
-
-    .project-card-title {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 8px;
-      padding-right: 30px;
-    }
-
-    .project-card-desc {
-      font-size: 14px;
-      color: var(--ink-3);
-      line-height: 1.7;
-      margin-bottom: 20px;
-      padding-right: 20px;
-    }
-
-    .project-roles {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .project-role {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      background: var(--surface-2);
-      color: var(--ink-3);
-      border: 1px solid var(--rule);
-    }
-
-    .project-role.main {
-      background: var(--ink);
-      color: var(--white);
-      border-color: var(--ink);
-    }
-
-
-    /* ── FOOTER ── */
-    .site-footer {
-      border-top: 1px solid var(--rule);
-      padding-top: 40px;
-      margin-top: 80px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      color: var(--ink-4);
-    }
-
-    @media (max-width: 620px) {
-      .page {
-        padding: 60px 24px 80px;
-      }
-      .skills-grid {
-        grid-template-columns: 1fr;
-      }
-      .site-footer {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-      }
-    }
-    
-    @media print {
-      .page {
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      .site-header {
-        margin-bottom: 40px !important;
-        padding-bottom: 20px !important;
-        border-bottom: 2px solid var(--ink) !important;
-      }
-      .project-card {
-        page-break-inside: avoid;
-        border-color: var(--ink-4) !important;
-      }
-      .site-footer {
-        display: none !important;
-      }
-      body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/global.css">
 </head>
 
 <body>
-  <div class="page">
+  <div class="page index-page">
 
     <!-- ══ HERO ══ -->
-    <header class="site-header">
+    <header class="site-header index-header">
       <div class="eyebrow">Portfolio</div>
       <h1>LEE RU RI<br>이루리</h1>
       <p class="subtitle">
-        <strong>소프트웨어 개발자</strong><br>
+        <strong>레거시 인프라 통합부터 AI 에이전트 플랫폼 구축까지, 시스템의 병목을 찾아 비즈니스 문제를 해결하는 풀스택 엔지니어 이루리입니다.</strong><br><br>
         비즈니스 로직과 데이터 파이프라인부터 AI 기반의 자동화 솔루션까지, 인프라의 깊은 이해를 바탕으로 효율적이고 견고한 애플리케이션을 설계합니다.
         Java/Spring 기반의 웹 서비스, C# 앱 개발, 그리고 Python 기반의 Multi-Agent 아키텍처 구축 경험을 보유하고 있습니다.
       </p>
@@ -472,12 +40,35 @@
 
       <div class="project-cards">
         
-        <!-- PROJECT 01 -->
-        <a href="project-01-vdi-ai.html" class="project-card">
-          <span class="project-card-num">Project 01</span>
-          <h3 class="project-card-title">VDI AI 통합 솔루션</h3>
+        <div style="margin-bottom:20px; padding-bottom:8px; border-bottom:1px solid var(--rule);">
+           <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--ink-3);">01. AI Agent Platform Series</span>
+        </div>
+
+        <!-- PROJECT 04 (최상위 플랫폼) -->
+        <a href="project-04-tool-search.html" class="project-card" style="margin-bottom: -4px;">
+          <span class="project-card-num">Project 04</span>
+          <h3 class="project-card-title">AI Agent Admin Console — 에이전트 통합 관리 플랫폼</h3>
           <p class="project-card-desc">
-            가상 데스크톱 인프라(VDI) 환경 관리를 자동화하는 솔루션. LangGraph 기반의 병렬 Tool 호출과 Auto-Compact 기능을 탑재한 Python AI Agent, C# vCompute 기반 리소스 수집 엔진, Java 통합 API 서버를 구축했습니다.
+            No-Code로 AI Agent를 생성·배포·관리하는 통합 어드민 콘솔. React+Node.js/Java·Spring 기반, LangChain create_agent(ReAct)·Multi-Agent(Main+Sub 툴 바인딩)·Agent Scheduler·외부 MCP(SSE) 연동·Tool Search(입력 토큰 ~90% 절감) 등 Agentic 기능을 플랫폼 비질로 제공합니다.
+          </p>
+          <div class="project-roles">
+            <span class="project-role main">Admin Console</span>
+            <span class="project-role main">Multi-Agent</span>
+            <span class="project-role">Tool Search</span>
+            <span class="project-role">LangChain</span>
+            <span class="project-role">MCP / SSE</span>
+            <span class="project-role">Agent Scheduler</span>
+          </div>
+          <div class="project-card-arrow">→</div>
+        </a>
+
+        <!-- PROJECT 01 (서브 도메인 앱) -->
+        <a href="project-01-vdi-ai.html" class="project-card" style="background:var(--surface);">
+          <div style="position:absolute; top:-24px; left:40px; width:2px; height:24px; background:var(--rule);"></div>
+          <span class="project-card-num">Project 01</span>
+          <h3 class="project-card-title">VDI AI 통합 솔루션 (Admin Console 실증 사례)</h3>
+          <p class="project-card-desc">
+            가상 데스크톱 인프라(VDI) 환경 관리를 자동화하는 특화 에이전트 솔루션. LangGraph 기반의 병렬 Tool 호출과 Auto-Compact 기능을 탑재한 Python AI Agent, C# vCompute 기반 리소스 수집 엔진, Java 통합 API 서버를 구축했습니다.
           </p>
           <div class="project-roles">
             <span class="project-role main">AI Agent (Python)</span>
@@ -488,6 +79,10 @@
           </div>
           <div class="project-card-arrow">→</div>
         </a>
+
+        <div style="margin-top:24px; margin-bottom:20px; padding-bottom:8px; border-bottom:1px solid var(--rule);">
+           <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--ink-3);">02. Legacy & Infrastructure Integration</span>
+        </div>
 
         <!-- PROJECT 02 -->
         <a href="project-02-seedvdi.html" class="project-card">
@@ -502,24 +97,6 @@
             <span class="project-role">Java</span>
             <span class="project-role">Spring Boot</span>
             <span class="project-role">보안 설계</span>
-          </div>
-          <div class="project-card-arrow">→</div>
-        </a>
-
-        <!-- PROJECT 04 -->
-        <a href="project-04-tool-search.html" class="project-card">
-          <span class="project-card-num">Project 04</span>
-          <h3 class="project-card-title">AI Agent Admin Console — 에이전트 통합 관리 플랫폼</h3>
-          <p class="project-card-desc">
-            No-Code로 AI Agent를 생성·배포·관리하는 통합 어드민 콘솔. React+Node.js/Java·Spring 기반, LangChain create_agent(ReAct)·Multi-Agent(Main+Sub 툴 바인딩)·Agent Scheduler·외부 MCP(SSE) 연동·Tool Search(입력 토큰 ~90% 절감) 등 Agentic 기능을 플랫폼 비질로 제공합니다.
-          </p>
-          <div class="project-roles">
-            <span class="project-role main">Admin Console</span>
-            <span class="project-role main">Multi-Agent</span>
-            <span class="project-role">Tool Search</span>
-            <span class="project-role">LangChain</span>
-            <span class="project-role">MCP / SSE</span>
-            <span class="project-role">Agent Scheduler</span>
           </div>
           <div class="project-card-arrow">→</div>
         </a>
