@@ -769,26 +769,33 @@
     <section id="ai-agent" class="section fade-up">
       <div class="section-number">01</div>
       <h2 class="section-title">AI Agent — 지능형 자원 관리 시스템 구축</h2>
-      <div class="section-sub">PYTHON · LANGGRAPH · CONTEXT MANAGEMENT</div>
+      <div class="section-sub">PYTHON · LANGCHAIN · CONTEXT MANAGEMENT</div>
 
       <div class="purpose-box">
         <div class="box-eyebrow">🎯 설계 핵심</div>
         <p>단순한 질의 응답을 넘어선 실질적인 자원 관리 에이전트를 목표로 개발했습니다.
-          LangGraph의 병렬 처리 구조로 도구 실행 속도를 대폭 개선하였으며, 장기 대화의 토큰 한계(Context Window)를 극복하기 위해 
-          **모델별 컨텍스트 레지스트리** 및 **Auto-Compact (이력 자동 압축)** 메커니즘을 적용했습니다.</p>
+          LangChain은 GPT·Claude 등 각 LLM 공급사의 ChatModel을 공통 인터페이스로 감싸는 래퍼를 제공하며,
+          이 ChatModel 래퍼의 파라미터를 통해 모델이 지원하는 경우 <strong>병렬 Tool 호출</strong>이 가능합니다.
+          직렬·병렬 호출 여부를 Config 값 하나로 전환할 수 있도록 추상화했으며,
+          장기 대화의 토큰 한계(Context Window)를 극복하기 위해 <strong>모델별 컨텍스트 레지스트리</strong> 및 <strong>Auto-Compact (이력 자동 압축)</strong> 메커니즘을 적용했습니다.</p>
       </div>
 
       <!-- 1-1. 병렬 처리 구조 -->
-      <div class="subsection-title">1-1. LangGraph 기반 병렬 Tool 처리 (ReAct Loop)</div>
+      <div class="subsection-title">1-1. LangChain ChatModel 래퍼의 병렬 Tool 호출 파라미터 제어</div>
       
       <div class="card">
         <div class="card-icon blue">⚡</div>
         <div>
-          <div class="card-title">도구 순차 체이닝 병목 해결</div>
-          <div class="card-desc">VM 조회, DB 쿼리, 상태 진단 등의 독립적인 `Tool` 작업들을 LangGraph의 노드로 나누어 병렬로 실행되도록 구성했습니다. 모든 Tool의 결과가 각자 완료되는 것을 기다린 뒤, 한 번에 <code>state</code>가 emit되는 일괄 처리 방식을 채택해 AI 결과 반환 체감 시간을 획기적으로 낮췄습니다.</div>
+          <div class="card-title">LangChain ChatModel 래퍼 기반 병렬 호출 제어</div>
+          <div class="card-desc">
+            LangChain은 GPT·Claude 등 각 LLM 공급사의 API를 <code>ChatOpenAI</code>, <code>ChatAnthropic</code> 등의 ChatModel 클래스로 감쌉니다.
+            이 래퍼는 모델이 지원하는 경우 <strong>병렬 Tool 호출</strong> 파라미터를 직접 노출합니다 —
+            하나의 LLM 추론 패스에서 여러 Tool을 동시에 호출하는 방식입니다.
+            이를 Config 값으로 제어해 <strong>직렬(Serial) ↔ 병렬(Parallel)</strong> 호출 모드를 전환할 수 있도록 구현했습니다.
+          </div>
         </div>
       </div>
-      
+
       <div class="ps-box" style="margin-top: 16px;">
         <div class="ps-row problem">
           <div class="ps-side">
@@ -796,7 +803,10 @@
           </div>
           <div class="ps-content">
             <span class="badge">LLM 공급사별 상이한 파라미터 규격</span><br><br>
-            병렬 호출을 지원하는 방식이 모델마다 상이했습니다 (예: GPT 계열은 <code>parallel_tool_calls=True</code>, Claude 계열은 반전 논리인 <code>disable_parallel_tool_use=False</code> 구조를 사용).
+            병렬 호출 파라미터 명칭이 모델마다 달랐습니다.
+            GPT 계열 ChatModel은 <code>parallel_tool_calls=True</code>,
+            Claude 계열은 반전 논리인 <code>disable_parallel_tool_use=False</code> 구조를 사용합니다.
+            공급사가 바뀔 때마다 호출부 코드를 수정해야 하는 문제가 있었습니다.
           </div>
         </div>
         <hr class="ps-divider">
@@ -805,8 +815,28 @@
             <div class="ps-side-label">Solution</div>
           </div>
           <div class="ps-content">
-            <span class="badge solved">Model Factory 패턴을 통한 추상화 제어</span><br><br>
-            각 LLM 생성 과정에서 <code>model_factory.py</code> 내부에 설정 인터페이스 단일화 로직을 구현. 외부 파운데이션은 환경 변수 `PARALLEL_TOOL_CALLS` 하나만 조작하면 내부 팩토리 계층에서 각 벤더별(GPT, Claude, 등) 규격에 맞게 파라미터를 자동 맵핑(Mapping)해 호출하도록 모듈을 분리했습니다.
+            <span class="badge solved">Model Factory 패턴으로 파라미터 추상화</span><br><br>
+            <code>model_factory.py</code>에서 LangChain ChatModel 인스턴스를 생성할 때,
+            환경 변수 <code>PARALLEL_TOOL_CALLS</code> 하나만 읽어 공급사별 실제 파라미터명으로 자동 매핑합니다.
+            호출부는 모델 공급사에 무관하게 동일한 Config 값으로 직렬·병렬 모드를 제어할 수 있습니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 직렬 vs 병렬 효과 -->
+      <div class="card" style="margin-top:16px; border-left: 3px solid var(--blue-border); background: var(--blue-bg);">
+        <div class="card-icon blue">📊</div>
+        <div>
+          <div class="card-title">직렬(Serial) vs 병렬(Parallel) — 호출 방식 비교 및 효과</div>
+          <div class="card-desc">
+            <strong>직렬 호출(Serial):</strong> LLM이 Tool A 결과 반환 → Tool B 호출 → Tool C 호출 순으로 각 Tool 결과를 받은 뒤 다음 Tool을 선택합니다.
+            독립적인 작업(VM 조회 + DB 쿼리 + 상태 진단)도 반드시 순서대로 실행되어 총 대기 시간이 N배 누적됩니다.<br><br>
+            <strong>병렬 호출(Parallel):</strong> LLM이 단일 추론 패스(Single Inference Pass)에서 독립적인 Tool 여러 개를 동시에 호출 목록으로 묶어 emit합니다.
+            모든 Tool 결과가 수집된 뒤 한 번에 LLM에 반환되므로, <strong>N개 Tool의 총 대기 시간이 가장 느린 Tool 1개의 응답 시간 수준으로 단축</strong>됩니다.<br><br>
+            <span class="badge solved">적용 효과</span>&nbsp;
+            VM 상태 조회·자원 통계·로그 수집 3개 Tool을 동시 호출하는 시나리오에서,
+            직렬 대비 체감 응답 속도가 <strong>약 2~3배 단축</strong>되었으며,
+            사용자 화면에 AI 결과가 표시되기까지의 대기 시간이 대폭 감소했습니다.
           </div>
         </div>
       </div>
