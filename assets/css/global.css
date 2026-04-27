@@ -57,7 +57,7 @@ a {
   text-decoration: none;
 }
 
-code {
+code, .code-snippet {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
   background: var(--surface);
@@ -65,6 +65,17 @@ code {
   border-radius: 4px;
   padding: 1px 6px;
   color: var(--ink-2);
+}
+
+pre.code-block {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 12px 0;
 }
 
 hr.rule {
@@ -345,7 +356,7 @@ hr.rule {
 .ps-row.solution .ps-side-label { color: var(--green); }
 .ps-content { padding: 18px 22px; font-size: 13px; color: var(--ink-3); line-height: 1.8; flex: 1; }
 .ps-divider { border: none; border-top: 1px solid var(--rule); margin: 0; }
-.badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red); }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red); }
 .badge.solved { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
 
 /* ── TIMELINE ── */
@@ -354,11 +365,14 @@ hr.rule {
 .tl-item { position: relative; margin-bottom: 28px; }
 .tl-item:last-child { margin-bottom: 0; }
 .tl-dot { position: absolute; left: -25px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--white); border: 1.5px solid var(--ink-4); z-index: 2; }
+.tl-item.active .tl-dot { border-color: var(--ink-2); background: var(--ink-2); }
+.tl-item.accent .tl-dot { border-color: var(--green); background: var(--green); }
+.tl-item.warning .tl-dot { border-color: var(--amber); background: var(--amber); }
 .tl-dot.blue { border-color: var(--blue); background: var(--blue-bg); }
 .tl-dot.green { border-color: var(--green); background: var(--green-bg); }
 .tl-dot.violet { border-color: var(--violet); background: var(--violet-bg); }
 .tl-dot.amber { border-color: var(--amber); background: var(--amber-bg); }
-.tl-phase { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 3px; }
+.tl-phase, .phase { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 3px; }
 .tl-phase.blue { color: var(--blue); }
 .tl-phase.green { color: var(--green); }
 .tl-phase.violet { color: var(--violet); }
@@ -404,3 +418,37 @@ hr.rule {
   .card, .ps-box, .seq-wrap, .purpose-box { page-break-inside: avoid; }
   body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* ── INDEX SPECIFIC (Projects & Career) ── */
+.project-cards { display: flex; flex-direction: column; gap: 20px; }
+.project-card { display: block; padding: 28px; border: 1px solid var(--rule); border-radius: 12px; background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; position: relative; }
+.project-card:hover { border-color: var(--ink-4); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); }
+.project-card-arrow { position: absolute; right: 28px; top: 28px; color: var(--ink-4); font-size: 20px; transition: transform 0.2s, color 0.2s; }
+.project-card:hover .project-card-arrow { transform: translateX(4px); color: var(--blue); }
+.project-card-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-4); margin-bottom: 8px; display: inline-block; letter-spacing: 0.1em; }
+.project-card-title { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 8px; padding-right: 30px; }
+.project-card-desc { font-size: 14px; color: var(--ink-3); line-height: 1.7; margin-bottom: 20px; padding-right: 20px; }
+.project-roles { display: flex; flex-wrap: wrap; gap: 6px; }
+.project-role { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 20px; background: var(--surface-2); color: var(--ink-3); border: 1px solid var(--rule); }
+.project-role.main { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+/* ── CAREER TIMELINE ── */
+.career-list { position: relative; padding-left: 26px; }
+.career-list::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 10px; width: 1px; background: var(--rule); }
+.career-item { position: relative; margin-bottom: 36px; }
+.career-item:last-child { margin-bottom: 0; }
+.career-dot { position: absolute; left: -23px; top: 8px; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--rule); background: var(--white); }
+.career-item:first-child .career-dot { border-color: var(--blue); background: var(--blue); }
+.career-period { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-4); margin-bottom: 4px; letter-spacing: 0.05em; }
+.career-title { font-family: 'Noto Serif KR', serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.career-desc { font-size: 14px; color: var(--ink-3); line-height: 1.7; margin-bottom: 12px; }
+.career-tasks { list-style: none; padding: 0; margin: 0; }
+.career-tasks li { font-size: 13.5px; color: var(--ink-2); line-height: 1.7; margin-bottom: 8px; position: relative; padding-left: 14px; }
+.career-tasks li::before { content: '·'; position: absolute; left: 0; top: 0; color: var(--ink-4); font-weight: bold; }
+.career-tasks strong { font-weight: 600; color: var(--ink); }
+
+/* ── SKILLS ── */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+.skill-group-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 12px; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.skill-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 10px; border-radius: 4px; background: var(--surface); border: 1px solid var(--rule); color: var(--ink-2); }
