@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이루리 포트폴리오 — 소프트웨어 개발자</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/global.css">
+</head>
+
+<body>
+  <div class="page index-page">
+
+    <!-- ══ HERO ══ -->
+    <header class="site-header index-header">
+      <div class="eyebrow">Portfolio</div>
+      <h1>LEE RU RI<br>이루리</h1>
+      <p class="subtitle">
+        <strong>레거시 인프라 통합부터 AI 에이전트 플랫폼 구축까지, 시스템의 병목을 찾아 비즈니스 문제를 해결하는 풀스택 엔지니어 이루리입니다.</strong><br><br>
+        비즈니스 로직과 데이터 파이프라인부터 AI 기반의 자동화 솔루션까지, 인프라의 깊은 이해를 바탕으로 효율적이고 견고한 애플리케이션을 설계합니다.
+        Java/Spring 기반의 웹 서비스, C# 앱 개발, 그리고 Python 기반의 Multi-Agent 아키텍처 구축 경험을 보유하고 있습니다.
+      </p>
+      <div class="contact-links" style="display: flex; flex-wrap: wrap; gap: 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--ink-3);">
+        <a href="resume.html" style="color: var(--ink-2); border-bottom: 1px solid var(--rule); padding-bottom: 2px; font-weight: 500;">📄 Resume & 경력기술서</a>
+        <a href="mailto:ruri.lee0223@gmail.com" style="color: var(--ink-3); border-bottom: 1px solid var(--rule); padding-bottom: 2px;">📩 ruri.lee0223@gmail.com</a>
+        <a href="https://github.com/Iroori" target="_blank" rel="noopener noreferrer" style="color: var(--ink-3); border-bottom: 1px solid var(--rule); padding-bottom: 2px;">🐙 GitHub</a>
+      </div>
+    </header>
+
+
+    <!-- ══ PROJECTS ══ -->
+    <section class="section fade-up">
+      <div class="section-number">01</div>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-sub">주요 프로젝트</div>
+
+      <div class="project-cards">
+        
+        <div style="margin-bottom:20px; padding-bottom:8px; border-bottom:1px solid var(--rule);">
+           <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--ink-3);">01. AI Agent Platform Series</span>
+        </div>
+
+        <!-- PROJECT 04 (최상위 플랫폼) -->
+        <a href="project-04-tool-search.html" class="project-card" style="margin-bottom: -4px;">
+          <span class="project-card-num">Project 04</span>
+          <h3 class="project-card-title">AI Agent Admin Console — 에이전트 통합 관리 플랫폼</h3>
+          <p class="project-card-desc">
+            No-Code로 AI Agent를 생성·배포·관리하는 통합 어드민 콘솔. React+Node.js/Java·Spring 기반, LangChain create_agent(ReAct)·Multi-Agent(Main+Sub 툴 바인딩)·Agent Scheduler·외부 MCP(SSE) 연동·Tool Search(입력 토큰 ~90% 절감) 등 Agentic 기능을 플랫폼 비질로 제공합니다.
+          </p>
+          <div class="project-roles">
+            <span class="project-role main">Admin Console</span>
+            <span class="project-role main">Multi-Agent</span>
+            <span class="project-role">Tool Search</span>
+            <span class="project-role">LangChain</span>
+            <span class="project-role">MCP / SSE</span>
+            <span class="project-role">Agent Scheduler</span>
+          </div>
+          <div class="project-card-arrow">→</div>
+        </a>
+
+        <!-- PROJECT 01 (서브 도메인 앱) -->
+        <a href="project-01-vdi-ai.html" class="project-card" style="background:var(--surface);">
+          <div style="position:absolute; top:-24px; left:40px; width:2px; height:24px; background:var(--rule);"></div>
+          <span class="project-card-num">Project 01</span>
+          <h3 class="project-card-title">VDI AI 통합 솔루션 (Admin Console 실증 사례)</h3>
+          <p class="project-card-desc">
+            가상 데스크톱 인프라(VDI) 환경 관리를 자동화하는 특화 에이전트 솔루션. LangGraph 기반의 병렬 Tool 호출과 Auto-Compact 기능을 탑재한 Python AI Agent, C# vCompute 기반 리소스 수집 엔진, Java 통합 API 서버를 구축했습니다.
+          </p>
+          <div class="project-roles">
+            <span class="project-role main">AI Agent (Python)</span>
+            <span class="project-role main">vCompute (C#)</span>
+            <span class="project-role main">API Server (Java)</span>
+            <span class="project-role">Multi-Agent</span>
+            <span class="project-role">Spring Boot</span>
+          </div>
+          <div class="project-card-arrow">→</div>
+        </a>
+
+        <div style="margin-top:24px; margin-bottom:20px; padding-bottom:8px; border-bottom:1px solid var(--rule);">
+           <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--ink-3);">02. Legacy & Infrastructure Integration</span>
+        </div>
+
+        <!-- PROJECT 02 -->
+        <a href="project-02-seedvdi.html" class="project-card">
+          <span class="project-card-num">Project 02</span>
+          <h3 class="project-card-title">SK하이닉스 SeedVDI 신규 구축</h3>
+          <p class="project-card-desc">
+            대규모 VDI 포털 구축 프로젝트. Horizon REST API 기반의 ~25,000대 VM 상태 수집 배치 플랫폼, C# 런처와 Java 서버 간의 RSA/AES 하이브리드 암호화 및 무결성 검증 플로우, 결재 연동 로직을 구현했습니다.
+          </p>
+          <div class="project-roles">
+            <span class="project-role main">Back-end</span>
+            <span class="project-role">C# .NET</span>
+            <span class="project-role">Java</span>
+            <span class="project-role">Spring Boot</span>
+            <span class="project-role">보안 설계</span>
+          </div>
+          <div class="project-card-arrow">→</div>
+        </a>
+
+        <!-- PROJECT 03 -->
+        <a href="project-03-iabse.html" class="project-card">
+          <span class="project-card-num">Project 03</span>
+          <h3 class="project-card-title">IABSE Congress 2026 결제·등록 시스템 풀스택 구축</h3>
+          <p class="project-card-desc">
+            AWS Lightsail 인프라 구축부터 GitHub Actions CI/CD, Nginx 리버스 프록시, SQL Server 운영, PayGate 글로벌 결제(국가별 MID 분기), SHA-256+BCrypt 보안 이중 해싱, 기간별 부분 환불 자동화까지 전 단계 1인 풀스택 구현.
+          </p>
+          <div class="project-roles">
+            <span class="project-role main">AWS Lightsail</span>
+            <span class="project-role main">GitHub Actions</span>
+            <span class="project-role main">Spring Boot 4</span>
+            <span class="project-role">React + TypeScript</span>
+            <span class="project-role">Nginx</span>
+            <span class="project-role">PayGate</span>
+          </div>
+          <div class="project-card-arrow">→</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ══ CAREER ══ -->
+    <section class="section fade-up">
+      <div class="section-number">02</div>
+      <h2 class="section-title">Career</h2>
+      <div class="section-sub">경력 요약</div>
+
+      <div class="career-list">
+        
+        <div class="career-item">
+          <div class="career-dot"></div>
+          <div class="career-period">2023.10 – 현재 (2년 6개월+)</div>
+          <div class="career-title">디포커스 (Dfocus)</div>
+          <div class="career-desc">주로 VDI 포털 구축 및 인프라 연동, AI 기반의 관리 자동화 솔루션 개발 전반을 담당하고 있습니다. C# 과 Python, Java 생태계를 오가며 다양한 프로토콜 통신을 설계합니다.</div>
+          <ul class="career-tasks">
+            <li><strong>AI Agent 기반 관리 솔루션 구축:</strong> LangGraph, LangChain을 활용한 도메인 특화 Multi-Agent 시스템 및 API 개발</li>
+            <li><strong>대규모 VDI 인프라 자동화 시스템 설계:</strong> ~25,000대 규모의 상태 수집 배치 플랫폼 성능 최적화 및 튜닝</li>
+            <li><strong>보안 통신 인프라 설계:</strong> RSA-AES 기반의 하이브리드 암호화 플로우 및 3단계 클라이언트 보안 검증 구현</li>
+            <li><strong>웹 서비스 결제 시스템 통합:</strong> PG사 연동을 통한 B2C 서비스 결제망, 부분 환불 로직 백엔드 구현</li>
+          </ul>
+        </div>
+
+        <div class="career-item">
+          <div class="career-dot"></div>
+          <div class="career-period">2022.03 – 2023.04 (1년 2개월)</div>
+          <div class="career-title">노아에스앤씨</div>
+          <div class="career-desc">GIS 기반 데이터 시각화 웹서비스 및 수자원 파이프라인 관리 시스템 파트를 담당했습니다. 대용량 공간 데이터(Shapefile) 핸들링 및 데이터 파이프라인 배치 최적화를 중점적으로 수행했습니다.</div>
+          <ul class="career-tasks">
+            <li><strong>대규모 데이터 연계 자동화 및 성능 최적화:</strong> Spring Batch와 Quartz 스케줄러 기반의 10분 주기 수자원 관측 데이터 파이프라인 구축. WITH 절 기반의 UPSERT 로직으로 중복 적재 이슈 해결 및 DB 부하 극복</li>
+            <li><strong>공간 데이터 멀티 포맷 파싱 및 시각화:</strong> .xlsx, .shp(Shapefile) 포맷을 파싱, OpenLayers 라이브러리를 활용한 사내 GIS 화면 실시간 표출</li>
+            <li><strong>GIS 데이터 연산 정밀도 개선:</strong> PostGIS 함수(ST_GeometryN, ST_StartPoint, ST_EndPoint)를 활용하여 Geometry를 LineString으로 변환 및 좌표 추출 기능 개발</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ SKILLS ══ -->
+    <section class="section fade-up">
+      <div class="section-number">03</div>
+      <h2 class="section-title">Skills</h2>
+      <div class="section-sub">기술 스택</div>
+
+      <div class="skills-grid">
+        
+        <div>
+          <div class="skill-group-title">Backend</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Java</span>
+            <span class="skill-tag">Spring Boot</span>
+            <span class="skill-tag">Spring Batch</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">FastAPI</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Express</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="skill-group-title">Application & AI</div>
+          <div class="skill-tags">
+            <span class="skill-tag">C# / .NET API</span>
+            <span class="skill-tag">LangChain</span>
+            <span class="skill-tag">LangGraph</span>
+            <span class="skill-tag">Anthropic / OpenAI API</span>
+            <span class="skill-tag">MCP Protocol</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="skill-group-title">Database / Infra / Frontend</div>
+          <div class="skill-tags">
+            <span class="skill-tag">PostgreSQL / PostGIS</span>
+            <span class="skill-tag">MSSQL</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">OpenLayers</span>
+            <span class="skill-tag">Jenkins</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="site-footer">
+      <div>© 2026 Lee Ru Ri</div>
+      <div style="font-family:'JetBrains Mono', monospace;">Last Updated: April 2026</div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Fade-up animation observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = `fadeUp 0.6s ease ${i * 0.08}s forwards`;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+
+</html>
