@@ -452,3 +452,14 @@ hr.rule {
 .skill-group-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 12px; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
 .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .skill-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 10px; border-radius: 4px; background: var(--surface); border: 1px solid var(--rule); color: var(--ink-2); }
+
+/* ── RESUME SKILL CHIPS (.sk) ── */
+.skill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.sk { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 10px; border-radius: 4px; background: var(--surface); border: 1px solid var(--rule); color: var(--ink-2); }
+.sk.b { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue); }
+.sk.g { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.sk.v { background: var(--violet-bg); border-color: var(--violet-border); color: var(--violet); }
+.sk.a { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
+
+/* ── TIMELINE MODIFIER COLORS ── */
+.tl-item.blue .tl-dot { border-color: var(--blue); background: var(--blue); }
