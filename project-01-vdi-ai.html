@@ -499,7 +499,7 @@
         </div>
       </div>
 
-      <div class="tag-row">
+      <div class="tag-row" style="margin-bottom: 40px;">
         <span class="tag green">Python</span>
         <span class="tag green">FastAPI</span>
         <span class="tag blue">LangGraph</span>
@@ -507,6 +507,61 @@
         <span class="tag violet">LLM Abstraction</span>
         <span class="tag amber">Auto-Compact</span>
         <span class="tag">Parallel Tool Calling</span>
+      </div>
+
+      <div class="subsection-title">1-4. Sub-Instruction Tool — 컨텍스트 선택적 로드</div>
+
+      <div class="card">
+        <div class="card-icon green">📋</div>
+        <div>
+          <div class="card-title">필요한 지침만 그때그때 검색·로드</div>
+          <div class="card-desc">
+            에이전트의 지침이 방대해질수록 모든 내용을 시스템 프롬프트에 상시 포함하면 매 요청마다 토큰 낭비가 발생합니다.
+            이를 해결하기 위해 <strong>에이전트가 필요한 시점에만 Sub-Instruction을 검색·로드</strong>할 수 있는 별도 Tool을 개발했습니다.
+            전체 지침을 컨텍스트에 상시 포함하지 않는 선택적 로드 방식으로, Tool Search와 함께 컨텍스트 효율성을 이중으로 확보합니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag green">Python</span>
+        <span class="tag blue">LangChain Tool</span>
+        <span class="tag amber">Context Optimization</span>
+      </div>
+
+    </section>
+
+    <hr class="rule">
+
+    <!-- ══ SECTION 01-5: DYNAMIC DATA ANALYZER ══ -->
+    <section id="dynamic-analyzer" class="section fade-up">
+      <div class="section-number">01-5</div>
+      <h2 class="section-title">TypeScript Dynamic Data Analyzer MCP Tool Server</h2>
+      <div class="section-sub">TYPESCRIPT · VM2 SANDBOX · AWS S3</div>
+
+      <div class="purpose-box">
+        <div class="box-eyebrow">🎯 목적</div>
+        <p>LLM이 직접 JavaScript 분석 코드를 작성하고 실제 데이터에 대해 실행할 수 있도록 하되, 호스트 환경을 안전하게 격리하는 MCP Tool Server를 TypeScript로 개발했습니다.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon violet">🧪</div>
+        <div>
+          <div class="card-title">vm2 샌드박스 격리 실행 환경</div>
+          <div class="card-desc">
+            LLM이 작성한 JavaScript 분석 코드를 <strong>vm2 샌드박스</strong> 내에서 실행하여 호스트 파일시스템·네트워크 접근을 원천 차단합니다.
+            AWS S3에서 데이터를 스트림 다운로드한 후 샌드박스 컨텍스트 변수로 주입하고,
+            lodash·mathjs·papaparse 등 분석에 필요한 라이브러리만 화이트리스트로 제공하여 보안과 유연성을 동시에 확보했습니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag green">TypeScript</span>
+        <span class="tag violet">vm2 Sandbox</span>
+        <span class="tag blue">MCP Protocol</span>
+        <span class="tag amber">AWS S3</span>
+        <span class="tag">lodash · mathjs · papaparse</span>
       </div>
 
     </section>
@@ -610,7 +665,7 @@
         </div>
       </div>
 
-      <div class="kp-grid">
+      <div class="kp-grid" style="margin-bottom: 40px;">
         <div class="kp-box">
           <div class="kp-label">📦 보일러플레이트 최소화</div>
           <p>Retrofit 적용으로 인해 C#의 REST 통신을 인터페이스 선언만으로 동적 생성하여 불필요한 구현 코드를 없앴습니다.</p>
@@ -620,13 +675,41 @@
           <p>LLM 에이전트의 접근도 Spring Security 레이어에서 사용자 콘텍스트로 판단하여 권한 이슈를 원천 차단했습니다.</p>
         </div>
       </div>
-      
+
+      <div class="subsection-title">멀티테넌트 API 서버 & Java AI Agent SDK</div>
+
+      <div class="card">
+        <div class="card-icon blue">🏢</div>
+        <div>
+          <div class="card-title">워크스페이스(테넌트) 단위 에이전트 설정 관리</div>
+          <div class="card-desc">
+            Admin Console과 AI Agent 양쪽이 공통으로 사용하는 중앙 API 서버는 워크스페이스(테넌트) 단위로 에이전트 설정·LLM 키·MCP 서버 정보를 관리합니다.
+            에이전트 초기화에 필요한 전체 구성 정보를 <strong>JPA fetch join 단일 쿼리</strong>로 조회하여 API 호출 횟수를 N회에서 1회로 축소했습니다.
+            대화 맥락(AgentContext)의 DB 영속화 및 <strong>낙관적 잠금 기반 동시 업데이트 충돌 감지</strong>도 설계했습니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon amber">📦</div>
+        <div>
+          <div class="card-title">Java AI Agent SDK — Azure Maven 배포</div>
+          <div class="card-desc">
+            AI Agent 기능을 어느 모듈에든 탑재할 수 있도록 Java 기반 SDK로 패키징하여 <strong>Azure Maven 서버에 배포</strong>했습니다.
+            의존성 추가만으로 로드 가능한 구조로 구현했으며, 클라이언트는 JavaScript로 별도 제공하여 웹 환경에서도 즉시 연동할 수 있습니다.
+          </div>
+        </div>
+      </div>
+
       <div class="tag-row">
         <span class="tag amber">Spring Boot</span>
         <span class="tag amber">Spring Security</span>
         <span class="tag blue">MCP Protocol</span>
         <span class="tag violet">Retrofit</span>
+        <span class="tag blue">JPA / Fetch Join</span>
+        <span class="tag">Optimistic Lock</span>
         <span class="tag">JWT</span>
+        <span class="tag">Azure Maven</span>
       </div>
 
     </section>

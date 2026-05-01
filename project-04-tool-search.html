@@ -339,8 +339,8 @@
       <div class="card">
         <div class="card-icon blue">🤖</div>
         <div>
-          <div class="card-title">No-Code Agent 생성 — Config UI 기반</div>
-          <div class="card-desc">모델 선택(GPT·Claude·등), 시스템 프롬프트, Tool 연결, MCP 서버 연동, 성능 파라미터까지 UI에서 설정하면 코드 직접 작성 없이 Agent가 생성됩니다. Agent ID를 DB에 저장하고 SDK로 여러 클라이언트에서 호출 가능합니다.</div>
+          <div class="card-title">No-Code Agent 생성 — Config UI 기반 (React 19 + MUI v7)</div>
+          <div class="card-desc">모델 선택(GPT·Claude·Gemini), 시스템 프롬프트, Tool 연결, MCP 서버 연동, 성능 파라미터까지 UI에서 설정하면 코드 직접 작성 없이 Agent가 생성됩니다. Agent ID를 DB에 저장하고 Java SDK·JavaScript 클라이언트를 통해 여러 클라이언트에서 호출 가능합니다.</div>
         </div>
       </div>
 
@@ -365,6 +365,22 @@
         <div>
           <div class="card-title">외부 MCP 서버 연동 — SSE / stdio</div>
           <div class="card-desc">SSE(Server-Sent Events)나 stdio 방식의 외부 MCP 서버를 UI에서 등록하고 Agent에 연결할 수 있습니다. VDI·vCenter 데이터를 제공하는 Java/Spring AI MCP 서버(SSE)도 이 연동을 통해 Agent에 연결됩니다. <code>defer_loading: true</code>로 선택적 Tool 로드도 지원합니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon green">📋</div>
+        <div>
+          <div class="card-title">Sub-Instruction Tool — 지침 선택적 로드</div>
+          <div class="card-desc">방대한 에이전트 지침을 시스템 프롬프트에 상시 포함하면 매 요청마다 토큰 낭비가 발생합니다. 에이전트가 필요한 시점에만 Sub-Instruction을 검색·로드하는 Tool을 개발하여, Tool Search와 함께 컨텍스트 효율성을 이중으로 확보했습니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon amber">🧪</div>
+        <div>
+          <div class="card-title">TypeScript Dynamic Data Analyzer MCP Tool Server</div>
+          <div class="card-desc">LLM이 작성한 JavaScript 분석 코드를 <strong>vm2 샌드박스</strong> 내에서 실행하여 호스트 파일시스템·네트워크를 완전 격리합니다. AWS S3 스트림 다운로드 데이터를 샌드박스 컨텍스트 변수로 주입하고, lodash·mathjs·papaparse 등 분석 라이브러리를 화이트리스트로 제공합니다.</div>
         </div>
       </div>
     </section>
@@ -814,7 +830,7 @@ tools = [
         <div class="kp-box">
           <div class="kp-label">🏗 No-Code Agent Builder</div>
           <p>개발자가 코드 수정 없이 UI 토글만으로 Tool Search 활성화·모드 전환 가능.
-          Tool 등록부터 MCP 연결, Search 모드 설정까지 완전 GUI 기반.</p>
+          Tool 등록부터 MCP 연결, Search 모드 설정까지 완전 GUI 기반. <strong>React 19 + MUI v7</strong> 기반의 Admin Console로 구현.</p>
         </div>
         <div class="kp-box">
           <div class="kp-label">📚 메타데이터 품질 기준</div>

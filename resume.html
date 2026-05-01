@@ -126,9 +126,39 @@
         <div class="card">
           <div class="card-icon amber">🔌</div>
           <div>
-            <div class="card-title">4. 멀티 LLM 추상화 & Retrofit 연동</div>
+            <div class="card-title">4. GPT·Claude·Gemini 멀티 LLM Model Factory</div>
             <div class="card-desc">
-              Agent Info의 <code>type</code> 필드만으로 동적 ChatModel 전환이 가능한 팩토리 패턴을 적용해 모델 교체 공수를 제로화했습니다. Java 서버 단에서는 에이전트 규격(MCP)과 웹 규격(REST)을 통합하고, 내부 모듈 통신에 <strong>Retrofit</strong>을 도입해 Type-Safe한 매핑을 보장했습니다.
+              GPT·Claude·Gemini 세 LLM 제공사를 공통 인터페이스로 추상화한 Model Factory를 직접 구현했습니다. Agent Info의 <code>type</code> 필드만으로 동적 ChatModel 전환이 가능해 모델 교체 공수를 제로화했고, 내부 모듈 통신에 <strong>Retrofit</strong>을 도입해 Type-Safe한 매핑을 보장했습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon green">📋</div>
+          <div>
+            <div class="card-title">5. Sub-Instruction Tool — 컨텍스트 선택적 로드</div>
+            <div class="card-desc">
+              지침이 방대해질수록 모든 내용을 컨텍스트에 상시 포함하면 토큰 낭비가 발생하는 문제를 해결하기 위해, 에이전트가 필요한 시점에만 Sub-Instruction을 검색·로드할 수 있는 Tool을 개발했습니다. 전체 지침을 상시 포함하지 않는 선택적 로드 방식으로 컨텍스트 효율성을 확보했습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon violet">🧪</div>
+          <div>
+            <div class="card-title">6. TypeScript Dynamic Data Analyzer MCP Tool Server</div>
+            <div class="card-desc">
+              LLM이 작성한 JavaScript 분석 코드를 <strong>vm2 샌드박스</strong> 내에서 실행하여 호스트 파일시스템·네트워크 접근을 차단하는 격리 실행 환경을 TypeScript로 구현했습니다. AWS S3에서 데이터를 스트림 다운로드 후 샌드박스 컨텍스트 변수로 주입하고, lodash·mathjs·papaparse 등 분석 라이브러리를 화이트리스트로 제공합니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon blue">📦</div>
+          <div>
+            <div class="card-title">7. Java AI Agent SDK & Spring Boot 멀티테넌트 API 서버</div>
+            <div class="card-desc">
+              AI Agent 기능을 어느 모듈에든 탑재할 수 있도록 Java 기반 SDK로 패키징하여 Azure Maven 서버에 배포했습니다. 중앙 API 서버는 워크스페이스(테넌트) 단위로 에이전트 설정을 관리하며, 에이전트 초기화에 필요한 전체 구성 정보를 JPA fetch join <strong>단일 쿼리</strong>로 조회하여 N+1 문제를 해결했습니다. 낙관적 잠금 기반 동시 업데이트 충돌 감지 설계도 적용했습니다.
             </div>
           </div>
         </div>
@@ -139,6 +169,9 @@
           <span class="tag blue">Java / Spring Boot</span>
           <span class="tag violet">C# / .NET SDK</span>
           <span class="tag amber">Tool Search (Lazy Loading)</span>
+          <span class="tag">TypeScript / MCP</span>
+          <span class="tag">React 19 / MUI v7</span>
+          <span class="tag">GPT · Claude · Gemini</span>
         </div>
 
         <div class="subsection-title">Project: SK하이닉스 SeedVDI 신규 구축</div>
@@ -179,11 +212,53 @@
           </div>
         </div>
 
-        <div class="tag-row" style="margin-top: 20px;">
+        <div class="tag-row" style="margin-top: 20px; margin-bottom: 48px;">
           <span class="tag blue">Java / Spring Boot</span>
           <span class="tag violet">C# .NET</span>
           <span class="tag green">RSA/AES Cryptography</span>
           <span class="tag amber">Thread Parallel</span>
+        </div>
+
+        <div class="subsection-title">SeedVDI 가상화솔루션 유지보수 <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-4); font-weight:400; margin-left:8px;">2024.04 – 2024.10</span></div>
+        <p style="font-size:14px; color:var(--ink-3); line-height:1.8; margin-bottom:24px;">
+          다수 고객사 SeedVDI 가상화솔루션의 Windows 기반 C# 관리자 프로그램(EXE), 사용자 포탈, 통신 모듈을 전담 유지보수했습니다.
+        </p>
+
+        <div class="card">
+          <div class="card-icon amber">🔧</div>
+          <div>
+            <div class="card-title">환경 의존성 버그 분석 및 방어 코드 추가</div>
+            <div class="card-desc">
+              고객사별 OS 버전·네트워크 환경·VMware 버전 차이로 인한 환경 의존성 버그를 분석하고 방어 코드를 추가하여 안정성을 확보했습니다. 다수 고객사의 운영 환경에서 수집한 요구사항을 기능 개선·패치 배포로 이어갔습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="tag-row" style="margin-top: 20px; margin-bottom: 48px;">
+          <span class="tag violet">C# / .NET</span>
+          <span class="tag">Windows</span>
+          <span class="tag">VMware Horizon</span>
+        </div>
+
+        <div class="subsection-title">SeedVDI 사용자 포탈 전환 (C# → Java) <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-4); font-weight:400; margin-left:8px;">2023.10 – 2024.03</span></div>
+        <p style="font-size:14px; color:var(--ink-3); line-height:1.8; margin-bottom:24px;">
+          입사 첫 프로젝트로, 기존 C# 기반 SeedVDI 사용자 포탈을 Spring Boot 기반으로 전환하는 작업에 참여했습니다.
+        </p>
+
+        <div class="card">
+          <div class="card-icon blue">🔄</div>
+          <div>
+            <div class="card-title">C# 소스 분석 → Spring Boot 재구현</div>
+            <div class="card-desc">
+              기존 C# 소스를 분석하여 비즈니스 로직과 화면 흐름을 파악하고 Spring Boot 기반으로 재구현했습니다. C# 클라이언트 기준으로 설계된 <strong>TCP/IP 소켓 통신 프로토콜</strong>을 분석하여 Java에서 동일한 패킷 구조와 직렬화 방식으로 재구현, VM 재시작·VM 접속 등 제어 명령이 CC 모듈 수정 없이 Java 환경에서 정상 동작하도록 전환 완료했습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="tag-row" style="margin-top: 20px;">
+          <span class="tag blue">Java / Spring Boot</span>
+          <span class="tag violet">C# .NET</span>
+          <span class="tag">TCP/IP Socket</span>
         </div>
       </div>
 
@@ -193,14 +268,19 @@
           <h3 style="font-family:'Noto Serif KR',serif; font-size: 20px; font-weight: 700; color: var(--ink);">노아에스앤씨</h3>
           <span style="font-family:'JetBrains Mono',monospace; font-size: 12px; color: var(--ink-4);">2022.03 – 2023.04 (1년 2개월)</span>
         </div>
-        <div style="font-size: 14px; color: var(--ink-3); margin-bottom: 24px;">솔루션 개발팀</div>
+        <div style="font-size: 14px; color: var(--ink-3); margin-bottom: 32px;">솔루션 개발팀</div>
+
+        <div class="subsection-title">Project: 빅데이터 기반 도시산불 방재 시스템</div>
+        <p style="font-size:14px; color:var(--ink-3); line-height:1.8; margin-bottom:24px;">
+          산불 방재 공공 데이터를 지도 기반으로 시각화하여 실시간 모니터링 환경을 구축하는 공공 SI 프로젝트에서 전자정부프레임워크 기반 백엔드 개발 및 GIS 데이터 처리를 담당했습니다.
+        </p>
 
         <div class="card">
           <div class="card-icon amber">🗄</div>
           <div>
-            <div class="card-title">수자원 관측 데이터 파이프라인 최적화</div>
+            <div class="card-title">Spring Batch 방재 데이터 자동 수집 파이프라인</div>
             <div class="card-desc">
-              Spring Batch와 Quartz를 활용해 10분 주기의 대용량 관측 데이터 파이프라인을 구축했습니다. 중복 적재 이슈와 DB 부하를 낮추기 위해 WITH절 기반의 UPSERT 로직을 도입하여 쿼리 성능을 대폭 향상시켰습니다.
+              Spring Batch와 Quartz를 활용해 10분 주기로 방재 데이터를 자동 수집하는 배치 파이프라인을 구축했습니다. 중복 적재 이슈와 DB 부하를 낮추기 위해 <strong>WITH절 기반 UPSERT 로직</strong>을 도입해 24시간 이내 데이터는 UPDATE, 신규 데이터만 INSERT하는 방식으로 데이터 정합성을 확보했습니다.
             </div>
           </div>
         </div>
@@ -208,9 +288,9 @@
         <div class="card">
           <div class="card-icon green">🗺</div>
           <div>
-            <div class="card-title">공간 데이터 파싱 및 GIS 웹 시각화</div>
+            <div class="card-title">PostGIS 공간 데이터 가공 및 GIS 실시간 시각화</div>
             <div class="card-desc">
-              .shp(Shapefile) 포맷 데이터를 파싱하고 PostGIS 공간 함수를 활용해 Geometry 변환 기능을 개발했습니다. 이를 바탕으로 React와 OpenLayers를 결합해 사내 대시보드에 공간 데이터를 실시간 시각화했습니다.
+              .shp(Shapefile) 포맷 공간 데이터를 파싱하고 PostGIS 공간 함수를 활용해 LineString 변환 및 좌표 정밀도를 보정했습니다. 가공된 GIS 데이터를 <strong>OpenLayers·Leaflet</strong> 라이브러리로 지도 위에 실시간 렌더링하여 방재 모니터링 환경을 구축했습니다.
             </div>
           </div>
         </div>
@@ -316,6 +396,7 @@
             <span class="sk v">MCP Protocol</span>
             <span class="sk">OpenAI API</span>
             <span class="sk">Anthropic API</span>
+            <span class="sk">Gemini API</span>
             <span class="sk">C# / .NET SDK</span>
           </div>
         </div>
