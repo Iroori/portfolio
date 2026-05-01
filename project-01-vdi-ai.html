@@ -210,7 +210,7 @@
 <body>
   <!-- 상단 네비게이션바 (Sticky) -->
   <nav class="site-nav">
-    <a href="index.html">← Back to Overview</a>
+    <a href="portfolio_combined.html">← Back to Overview</a>
     <div class="nav-links">
       <a href="#overview">Overview</a>
       <a href="#ai-agent">AI Agent</a>
@@ -382,7 +382,7 @@
         </div>
         <hr class="ps-divider">
         <div class="ps-row solution">
-          <div class="ps-side"><div class="ps-side-label">✓ 해결</div></div>
+          <div class="ps-side"><div class="ps-side-label">Solution</div></div>
           <div class="ps-content">
             <span class="badge solved">역할별 Sub-Agent 분리 → Tool 바인딩</span><br><br>
             도메인별로 독립 Sub-Agent를 별도 생성하고 Main Agent의 Tool로 등록했습니다.
@@ -412,7 +412,7 @@
       <div class="ps-box" style="margin-top: 16px;">
         <div class="ps-row problem">
           <div class="ps-side">
-            <div class="ps-side-label">Issue</div>
+            <div class="ps-side-label">Problem</div>
           </div>
           <div class="ps-content">
             <span class="badge">LLM 공급사별 상이한 파라미터 규격</span><br><br>
@@ -534,40 +534,7 @@
 
     <hr class="rule">
 
-    <!-- ══ SECTION 01-5: DYNAMIC DATA ANALYZER ══ -->
-    <section id="dynamic-analyzer" class="section fade-up">
-      <div class="section-number">01-5</div>
-      <h2 class="section-title">TypeScript Dynamic Data Analyzer MCP Tool Server</h2>
-      <div class="section-sub">TYPESCRIPT · VM2 SANDBOX · AWS S3</div>
 
-      <div class="purpose-box">
-        <div class="box-eyebrow">🎯 목적</div>
-        <p>LLM이 직접 JavaScript 분석 코드를 작성하고 실제 데이터에 대해 실행할 수 있도록 하되, 호스트 환경을 안전하게 격리하는 MCP Tool Server를 TypeScript로 개발했습니다.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon violet">🧪</div>
-        <div>
-          <div class="card-title">vm2 샌드박스 격리 실행 환경</div>
-          <div class="card-desc">
-            LLM이 작성한 JavaScript 분석 코드를 <strong>vm2 샌드박스</strong> 내에서 실행하여 호스트 파일시스템·네트워크 접근을 원천 차단합니다.
-            AWS S3에서 데이터를 스트림 다운로드한 후 샌드박스 컨텍스트 변수로 주입하고,
-            lodash·mathjs·papaparse 등 분석에 필요한 라이브러리만 화이트리스트로 제공하여 보안과 유연성을 동시에 확보했습니다.
-          </div>
-        </div>
-      </div>
-
-      <div class="tag-row">
-        <span class="tag green">TypeScript</span>
-        <span class="tag violet">vm2 Sandbox</span>
-        <span class="tag blue">MCP Protocol</span>
-        <span class="tag amber">AWS S3</span>
-        <span class="tag">lodash · mathjs · papaparse</span>
-      </div>
-
-    </section>
-
-    <hr class="rule">
 
     <!-- ══ SECTION 02: vCOMPUTE ══ -->
     <section id="vcompute" class="section fade-up">
@@ -717,7 +684,7 @@
 
     <!-- ══ FOOTER NAV ══ -->
     <div class="project-nav-footer fade-up">
-      <a href="index.html" class="project-nav-link prev">
+      <a href="portfolio_combined.html" class="project-nav-link prev">
         <span class="nav-label">Main Menu</span>
         <span class="nav-title">이루리 포트폴리오</span>
       </a>

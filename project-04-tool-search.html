@@ -5,10 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Agent Admin Console — 에이전트 통합 관리 플랫폼 — Project 04</title>
-  <meta name="description" content="GPT·Claude 모델 기반 No-Code AI Agent 관리 플랫폼 — Multi-Agent, MCP 연동, Tool Search, Context 관리, Agent Scheduler">
+  <meta name="description"
+    content="GPT·Claude 모델 기반 No-Code AI Agent 관리 플랫폼 — Multi-Agent, MCP 연동, Tool Search, Context 관리, Agent Scheduler">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="assets/css/global.css">
   <style>
     /* ── DIAGRAM (Tool Search Flow) ── */
@@ -18,6 +20,7 @@
       overflow: hidden;
       margin-bottom: 28px;
     }
+
     .diagram-top-bar {
       background: var(--surface-2);
       border-bottom: 1px solid var(--rule);
@@ -31,6 +34,7 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .diagram-body {
       padding: 28px 24px 20px;
       background: var(--white);
@@ -44,6 +48,7 @@
       align-items: center;
       width: 100%;
     }
+
     .flow-node {
       border: 1px solid var(--rule);
       border-radius: 9px;
@@ -54,6 +59,7 @@
       width: 100%;
       max-width: 380px;
     }
+
     .flow-node .n-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 9.5px;
@@ -62,32 +68,73 @@
       color: var(--ink-4);
       margin-bottom: 4px;
     }
+
     .flow-node .n-name {
       font-size: 13px;
       font-weight: 500;
       color: var(--ink-2);
     }
-    .flow-node.blue   { background: var(--blue-bg);   border-color: var(--blue-border);   }
-    .flow-node.green  { background: var(--green-bg);  border-color: var(--green-border);  }
-    .flow-node.violet { background: var(--violet-bg); border-color: var(--violet-border); }
-    .flow-node.amber  { background: var(--amber-bg);  border-color: var(--amber-border);  }
-    .flow-node.blue .n-name   { color: var(--blue); }
-    .flow-node.green .n-name  { color: var(--green); }
-    .flow-node.violet .n-name { color: var(--violet); }
-    .flow-node.amber .n-name  { color: var(--amber); }
+
+    .flow-node.blue {
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+    }
+
+    .flow-node.green {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+
+    .flow-node.violet {
+      background: var(--violet-bg);
+      border-color: var(--violet-border);
+    }
+
+    .flow-node.amber {
+      background: var(--amber-bg);
+      border-color: var(--amber-border);
+    }
+
+    .flow-node.blue .n-name {
+      color: var(--blue);
+    }
+
+    .flow-node.green .n-name {
+      color: var(--green);
+    }
+
+    .flow-node.violet .n-name {
+      color: var(--violet);
+    }
+
+    .flow-node.amber .n-name {
+      color: var(--amber);
+    }
 
     .flow-conn {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 1px; margin: 4px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      margin: 4px 0;
     }
+
     .flow-conn .proto {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--ink-4);
-      background: var(--white); padding: 0 6px;
-      position: relative; z-index: 1;
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+      background: var(--white);
+      padding: 0 6px;
+      position: relative;
+      z-index: 1;
     }
-    .flow-conn .arrow { font-size: 13px; color: var(--rule); }
+
+    .flow-conn .arrow {
+      font-size: 13px;
+      color: var(--rule);
+    }
 
     /* Split branch in diagram */
     .flow-branch {
@@ -97,24 +144,55 @@
       max-width: 560px;
       margin-top: 4px;
     }
+
     .flow-branch-item {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 4px; flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
     }
+
     .flow-branch-divider {
-      width: 1px; background: var(--rule);
-      height: 80px; align-self: center;
+      width: 1px;
+      background: var(--rule);
+      height: 80px;
+      align-self: center;
     }
+
     .proto-badge {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; text-transform: uppercase;
-      letter-spacing: 0.1em; padding: 3px 9px;
-      border-radius: 4px; border: 1px solid;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid;
     }
-    .proto-badge.green  { color: var(--green);  border-color: var(--green-border);  background: var(--green-bg); }
-    .proto-badge.blue   { color: var(--blue);   border-color: var(--blue-border);   background: var(--blue-bg); }
-    .proto-badge.violet { color: var(--violet); border-color: var(--violet-border); background: var(--violet-bg); }
-    .proto-badge.amber  { color: var(--amber);  border-color: var(--amber-border);  background: var(--amber-bg); }
+
+    .proto-badge.green {
+      color: var(--green);
+      border-color: var(--green-border);
+      background: var(--green-bg);
+    }
+
+    .proto-badge.blue {
+      color: var(--blue);
+      border-color: var(--blue-border);
+      background: var(--blue-bg);
+    }
+
+    .proto-badge.violet {
+      color: var(--violet);
+      border-color: var(--violet-border);
+      background: var(--violet-bg);
+    }
+
+    .proto-badge.amber {
+      color: var(--amber);
+      border-color: var(--amber-border);
+      background: var(--amber-bg);
+    }
 
     .diagram-note {
       border-top: 1px solid var(--rule);
@@ -135,9 +213,11 @@
       font-size: 13px;
       margin: 20px 0;
     }
+
     .compare-table thead tr {
       background: var(--surface-2);
     }
+
     .compare-table th {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
@@ -148,14 +228,22 @@
       text-align: left;
       border-bottom: 1px solid var(--rule);
     }
+
     .compare-table td {
       padding: 10px 16px;
       border-bottom: 1px solid var(--rule);
       color: var(--ink-3);
       line-height: 1.6;
     }
-    .compare-table tr:last-child td { border-bottom: none; }
-    .compare-table tr:nth-child(even) td { background: var(--surface); }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tr:nth-child(even) td {
+      background: var(--surface);
+    }
+
     .compare-table td:first-child {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
@@ -174,6 +262,7 @@
       color: var(--ink-3);
       line-height: 1.75;
     }
+
     .insight-box .insight-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 9.5px;
@@ -182,50 +271,113 @@
       color: var(--blue);
       margin-bottom: 6px;
     }
+
     .insight-box.green {
       border-left-color: var(--green-border);
       background: var(--green-bg);
     }
-    .insight-box.green .insight-label { color: var(--green); }
+
+    .insight-box.green .insight-label {
+      color: var(--green);
+    }
+
     .insight-box.amber {
       border-left-color: var(--amber-border);
       background: var(--amber-bg);
     }
-    .insight-box.amber .insight-label { color: var(--amber); }
+
+    .insight-box.amber .insight-label {
+      color: var(--amber);
+    }
 
     /* ── FOOTER NAV ── */
     .project-nav-footer {
       border-top: 1px solid var(--rule);
-      display: flex; justify-content: space-between;
-      align-items: center; padding-top: 30px; margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 30px;
+      margin-top: 60px;
     }
+
     .project-nav-link {
-      display: flex; flex-direction: column; gap: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
-    .project-nav-link.next { text-align: right; align-items: flex-end; }
+
+    .project-nav-link.next {
+      text-align: right;
+      align-items: flex-end;
+    }
+
     .nav-label {
-      font-family: 'JetBrains Mono', monospace; font-size: 10px;
-      color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.1em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-4);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
+
     .nav-title {
-      font-family: 'Noto Serif KR', serif; font-size: 16px;
-      font-weight: 600; color: var(--ink); transition: color 0.2s;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      transition: color 0.2s;
     }
-    .project-nav-link:hover .nav-title { color: var(--blue); }
+
+    .project-nav-link:hover .nav-title {
+      color: var(--blue);
+    }
 
     @media (max-width: 620px) {
-      .page { padding: 0 24px 80px; }
-      .site-nav { padding: 16px 24px; flex-direction: column; gap: 12px; align-items: flex-start; }
-      .nav-links { flex-wrap: wrap; gap: 12px; }
-      .flow-branch { flex-direction: column; align-items: center; }
-      .flow-branch-divider { display: none; }
+      .page {
+        padding: 0 24px 80px;
+      }
+
+      .site-nav {
+        padding: 16px 24px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .flow-branch {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .flow-branch-divider {
+        display: none;
+      }
     }
 
     @media print {
-      .site-nav, .project-nav-footer { display: none !important; }
-      .page { padding: 0 !important; margin: 0 !important; }
-      .section { page-break-inside: avoid; }
-      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      .site-nav,
+      .project-nav-footer {
+        display: none !important;
+      }
+
+      .page {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .section {
+        page-break-inside: avoid;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
     }
   </style>
 </head>
@@ -233,7 +385,7 @@
 <body>
   <!-- ── NAVIGATION ── -->
   <nav class="site-nav">
-    <a href="index.html">← Back to Overview</a>
+    <a href="portfolio_combined.html">← Back to Overview</a>
     <div class="nav-links">
       <a href="#platform">Platform</a>
       <a href="#tool-search">Tool Search</a>
@@ -250,9 +402,9 @@
       <h1>AI Agent Admin Console<br>— 에이전트 통합 관리 플랫폼</h1>
       <p class="subtitle">
         GPT·Claude 등 다양한 LLM을 기반으로 <strong>No-Code로 AI Agent를 생성·배포·관리</strong>할 수 있는 통합 에이전트 어드민 콘솔입니다.
-        React + Node.js 프론트 / Java·Spring튰 백엔드로 구성되며, LangChain <code>create_agent</code>(ReAct) 기반으로
+        React + Node.js 프론트 / Java·Spring 기반 백엔드로 구성되며, LangChain <code>create_agent</code>(ReAct) 기반으로
         <strong>Main Agent(오케스트레이터) + Sub-Agents(툴 바인딩)</strong> 구조를 지원하고,
-        외부 MCP 서버(SSE, stdio), Agent Scheduler, Tool Search 등 에이전튱한 기능을 플랫폼 비질로 제공합니다.
+        외부 MCP 서버(SSE, stdio), Agent Scheduler, Tool Search 등 에이전트 특화 기능을 플랫폼 기본으로 제공합니다.
         VDI AI 솔루션은 이 Admin Console로 구축한 특화 Agent 사례입니다.
       </p>
       <div>
@@ -283,7 +435,7 @@
       <div class="purpose-box">
         <div class="box-eyebrow">🎯 플랫폼 목적</div>
         <p>개발자가 코드를 작성하지 않고도 UI Config만으로 AI Agent를 생성·설정·실행할 수 있는 통합 관리 플랫폼입니다.
-          VDI AI Agent는 이 콘솔로 만든 특화 Agent 사례이며, 동일한 플랭폼에서 다양한 비즈니스 도메인의 Agent를 구축할 수 있습니다.</p>
+          VDI AI Agent는 이 콘솔로 만든 특화 Agent 사례이며, 동일한 플랫폼에서 다양한 비즈니스 도메인의 Agent를 구축할 수 있습니다.</p>
       </div>
 
       <!-- Platform Tech Stack -->
@@ -319,8 +471,10 @@
             <!-- AI Agent Server -->
             <div class="flow-node green" style="max-width:380px;padding:14px 22px;">
               <div class="n-label">AI Agent Server · Python</div>
-              <div class="n-name">🐍 LangChain <code style="font-size:11px;color:var(--green);">create_agent</code> · ReAct<br>
-                <span style="font-size:11px;color:var(--green);">Main Agent + Sub-Agents (툴 바인딩) · External MCP (SSE)</span>
+              <div class="n-name">🐍 LangChain <code style="font-size:11px;color:var(--green);">create_agent</code> ·
+                ReAct<br>
+                <span style="font-size:11px;color:var(--green);">Main Agent + Sub-Agents (툴 바인딩) · External MCP
+                  (SSE)</span>
               </div>
             </div>
           </div>
@@ -339,7 +493,8 @@
         <div class="card-icon blue">🤖</div>
         <div>
           <div class="card-title">No-Code Agent 생성 — Config UI 기반 (React 19 + MUI v7)</div>
-          <div class="card-desc">모델 선택(GPT·Claude·Gemini), 시스템 프롬프트, Tool 연결, MCP 서버 연동, 성능 파라미터까지 UI에서 설정하면 코드 직접 작성 없이 Agent가 생성됩니다. Agent ID를 DB에 저장하고 Java SDK·JavaScript 클라이언트를 통해 여러 클라이언트에서 호출 가능합니다.</div>
+          <div class="card-desc">모델 선택(GPT·Claude·Gemini), 시스템 프롬프트, Tool 연결, MCP 서버 연동, 성능 파라미터까지 UI에서 설정하면 코드 직접 작성 없이
+            Agent가 생성됩니다. Agent ID를 DB에 저장하고 Java SDK·JavaScript 클라이언트를 통해 여러 클라이언트에서 호출 가능합니다.</div>
         </div>
       </div>
 
@@ -347,7 +502,9 @@
         <div class="card-icon green">🔗</div>
         <div>
           <div class="card-title">Multi-Agent — Main + Sub-Agent Tool 바인딩</div>
-          <div class="card-desc">독립 Sub-Agent를 Main Agent의 Tool로 등록하는 Multi-Agent 구조를 지원합니다. Sub-Agent도 <code>create_agent</code>로 만든 독립적인 Agent입니다. Admin Console에서 <code>type: sub</code>로 설정하면 Main의 Tool로 바인딩되어 ReAct 루프 내에서 호출됩니다.</div>
+          <div class="card-desc">독립 Sub-Agent를 Main Agent의 Tool로 등록하는 Multi-Agent 구조를 지원합니다. Sub-Agent도
+            <code>create_agent</code>로 만든 독립적인 Agent입니다. Admin Console에서 <code>type: sub</code>로 설정하면 Main의 Tool로 바인딩되어
+            ReAct 루프 내에서 호출됩니다.</div>
         </div>
       </div>
 
@@ -355,7 +512,8 @@
         <div class="card-icon amber">⏰</div>
         <div>
           <div class="card-title">Agent Scheduler — 스케줄 기반 자동 실행</div>
-          <div class="card-desc">Cron 및 이벤트 기반으로 Agent를 자동 실행하는 스케줄러 기능을 제공합니다. 정해진 시간에 VDI 인프라 상태 보고서를 자동 생성하거나 주기적 자원 상태 점검 등 에이전튱한 자동화를 실현합니다.</div>
+          <div class="card-desc">Cron 및 이벤트 기반으로 Agent를 자동 실행하는 스케줄러 기능을 제공합니다. 정해진 시간에 VDI 인프라 상태 보고서를 자동 생성하거나 주기적 자원
+            상태 점검 등 다양한 자동화를 실현합니다.</div>
         </div>
       </div>
 
@@ -363,7 +521,9 @@
         <div class="card-icon violet">🔌</div>
         <div>
           <div class="card-title">외부 MCP 서버 연동 — SSE / stdio</div>
-          <div class="card-desc">SSE(Server-Sent Events)나 stdio 방식의 외부 MCP 서버를 UI에서 등록하고 Agent에 연결할 수 있습니다. VDI·vCenter 데이터를 제공하는 Java/Spring AI MCP 서버(SSE)도 이 연동을 통해 Agent에 연결됩니다. <code>defer_loading: true</code>로 선택적 Tool 로드도 지원합니다.</div>
+          <div class="card-desc">SSE(Server-Sent Events)나 stdio 방식의 외부 MCP 서버를 UI에서 등록하고 Agent에 연결할 수 있습니다. VDI·vCenter
+            데이터를 제공하는 Java/Spring AI MCP 서버(SSE)도 이 연동을 통해 Agent에 연결됩니다. <code>defer_loading: true</code>로 선택적 Tool 로드도
+            지원합니다.</div>
         </div>
       </div>
 
@@ -371,17 +531,11 @@
         <div class="card-icon green">📋</div>
         <div>
           <div class="card-title">Sub-Instruction Tool — 지침 선택적 로드</div>
-          <div class="card-desc">방대한 에이전트 지침을 시스템 프롬프트에 상시 포함하면 매 요청마다 토큰 낭비가 발생합니다. 에이전트가 필요한 시점에만 Sub-Instruction을 검색·로드하는 Tool을 개발하여, Tool Search와 함께 컨텍스트 효율성을 이중으로 확보했습니다.</div>
+          <div class="card-desc">방대한 에이전트 지침을 시스템 프롬프트에 상시 포함하면 매 요청마다 토큰 낭비가 발생합니다. 에이전트가 필요한 시점에만 Sub-Instruction을
+            검색·로드하는 Tool을 개발하여, Tool Search와 함께 컨텍스트 효율성을 이중으로 확보했습니다.</div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-icon amber">🧪</div>
-        <div>
-          <div class="card-title">TypeScript Dynamic Data Analyzer MCP Tool Server</div>
-          <div class="card-desc">LLM이 작성한 JavaScript 분석 코드를 <strong>vm2 샌드박스</strong> 내에서 실행하여 호스트 파일시스템·네트워크를 완전 격리합니다. AWS S3 스트림 다운로드 데이터를 샌드박스 컨텍스트 변수로 주입하고, lodash·mathjs·papaparse 등 분석 라이브러리를 화이트리스트로 제공합니다.</div>
-        </div>
-      </div>
     </section>
 
     <hr class="rule">
@@ -404,7 +558,9 @@
 
       <div class="ps-box">
         <div class="ps-row problem">
-          <div class="ps-side"><div class="ps-side-label">Issue</div></div>
+          <div class="ps-side">
+            <div class="ps-side-label">Problem</div>
+          </div>
           <div class="ps-content">
             <span class="badge">Tool Schema 과부하</span><br><br>
             MCP 서버 3개 이상 연결 시 Tool definition이 <code>context window</code>의 30~40%를 차지.
@@ -414,7 +570,9 @@
         </div>
         <hr class="ps-divider">
         <div class="ps-row solution">
-          <div class="ps-side"><div class="ps-side-label">✓ 해결</div></div>
+          <div class="ps-side">
+            <div class="ps-side-label">Solution</div>
+          </div>
           <div class="ps-content">
             GPT 계열은 <code>{type: "toolsearch"}</code> 파라미터로, Claude 계열은
             <code>tool_search_tool_bm25</code> / <code>tool_search_tool_regex</code> 중
@@ -464,7 +622,8 @@
           <tr>
             <td>활성화 방법</td>
             <td><code>tools</code> 배열에 <code>{type: "toolsearch"}</code> 항목 추가. Model이 자체적으로 호스팅 검색 수행</td>
-            <td><code>tools</code>에 <code>tool_search_tool_bm25</code> 또는 <code>tool_search_tool_regex</code> 추가 후 사용자 선택 모드로 동작</td>
+            <td><code>tools</code>에 <code>tool_search_tool_bm25</code> 또는 <code>tool_search_tool_regex</code> 추가 후 사용자
+              선택 모드로 동작</td>
           </tr>
           <tr>
             <td>검색 알고리즘</td>
@@ -749,7 +908,7 @@
         <div>
           <div class="card-title">Claude — BM25 Tool Search + MCP defer_loading</div>
           <div class="card-desc">
-<pre class="code-block"># Claude Sonnet 4.5+ / Haiku 4.5 / Opus 기준
+            <pre class="code-block"># Claude Sonnet 4.5+ / Haiku 4.5 / Opus 기준
 tools = [
     {
         "type": "tool_search_tool_bm25_20251119"  # BM25 모드
@@ -779,7 +938,7 @@ headers = {
         <div>
           <div class="card-title">GPT — toolsearch 타입 + defer_loading</div>
           <div class="card-desc">
-<pre class="code-block"># GPT-5.4+ 기준
+            <pre class="code-block"># GPT-5.4+ 기준
 tools = [
     {
         "type": "toolsearch"    # Tool Search 활성화
@@ -809,32 +968,33 @@ tools = [
         <div class="kp-box">
           <div class="kp-label">📉 입력 토큰 절감</div>
           <p>Claude 계열 Tool Search 활성화 후 API 로그 기준 <strong>입력 토큰 약 1/10 수준</strong>으로 감소.
-          MCP 도구 포함 대규모 Tool 카탈로그에서 비용 및 응답 품질 동시 개선.</p>
+            MCP 도구 포함 대규모 Tool 카탈로그에서 비용 및 응답 품질 동시 개선.</p>
         </div>
         <div class="kp-box">
           <div class="kp-label">🔄 외부 MCP 동적 로딩</div>
           <p>클라이언트에서 Schema를 직접 볼 수 없는 외부 MCP 서버 도구도
-          <code>defer_loading: true</code>로 LLM 서버 내부에서 동적 탐색·로딩 실현.</p>
+            <code>defer_loading: true</code>로 LLM 서버 내부에서 동적 탐색·로딩 실현.
+          </p>
         </div>
         <div class="kp-box">
           <div class="kp-label">🎛 사용자 선택 모드</div>
           <p>Claude 계열에서 <strong>BM25(시맨틱 자연어)</strong>와 <strong>Regex(패턴 정밀 매칭)</strong>를
-          Agent Builder UI에서 모드 전환으로 선택 가능. 사용 케이스에 따라 최적 전략 선택.</p>
+            Agent Builder UI에서 모드 전환으로 선택 가능. 사용 케이스에 따라 최적 전략 선택.</p>
         </div>
         <div class="kp-box">
           <div class="kp-label">🤖 모델 자동 분기</div>
           <p>GPT 계열(<code>toolsearch</code> type)과 Claude 계열(BM25/Regex)의 API 차이를 추상화.
-          LangChain <code>create_agent</code> 래퍼가 모델에 따라 Tool Search 설정을 자동 분기·주입.</p>
+            LangChain <code>create_agent</code> 래퍼가 모델에 따라 Tool Search 설정을 자동 분기·주입.</p>
         </div>
         <div class="kp-box">
           <div class="kp-label">🏗 No-Code Agent Builder</div>
           <p>개발자가 코드 수정 없이 UI 토글만으로 Tool Search 활성화·모드 전환 가능.
-          Tool 등록부터 MCP 연결, Search 모드 설정까지 완전 GUI 기반. <strong>React 19 + MUI v7</strong> 기반의 Admin Console로 구현.</p>
+            Tool 등록부터 MCP 연결, Search 모드 설정까지 완전 GUI 기반. <strong>React 19 + MUI v7</strong> 기반의 Admin Console로 구현.</p>
         </div>
         <div class="kp-box">
           <div class="kp-label">📚 메타데이터 품질 기준</div>
           <p>BM25·Regex 검색 정확도는 Tool description 품질에 직결됨을 확인.
-          MCP 서버 Tool 설명 작성 가이드라인을 팀 내 표준으로 수립하여 탐색 정밀도 확보.</p>
+            MCP 서버 Tool 설명 작성 가이드라인을 팀 내 표준으로 수립하여 탐색 정밀도 확보.</p>
         </div>
       </div>
     </section>
@@ -845,7 +1005,7 @@ tools = [
         <span class="nav-label">← Previous</span>
         <span class="nav-title">IABSE 결제 시스템</span>
       </a>
-      <a href="index.html" class="project-nav-link next" style="text-decoration:none;">
+      <a href="portfolio_combined.html" class="project-nav-link next" style="text-decoration:none;">
         <span class="nav-label">Home</span>
         <span class="nav-title">Overview →</span>
       </a>
