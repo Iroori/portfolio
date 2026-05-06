@@ -153,9 +153,9 @@
 
       <h1>SK하이닉스 SeedVDI 신규 구축 프로젝트</h1>
       <p class="subtitle">
-        Horizon REST API 기반의 ~25,000대 대규모 VM 상태 수집 배치 플랫폼 구축.
-        인프라망 보안 정책에 맞춘 C# 런처와 Java 서버 간의 RSA+AES 하이브리드 암호화 통신 플로우,
-        그리고 사내 결재망 통합을 위한 SOAP / REST 인터페이스 설계 업무를 전담했습니다.
+        Horizon REST API를 활용해 약 25,000대 규모의 대용량 VM 상태를 수집하는 배치 플랫폼을 구축했습니다.
+        인프라 보안 정책을 충족하기 위해 C# 런처와 Java 서버 간 RSA-AES 하이브리드 암호화 통신망을 구성하였으며,
+        사내 결재 시스템 연동을 위한 SOAP 및 REST 인터페이스 개발을 전담했습니다.
       </p>
       <div>
         <span class="role-chip primary">Backend</span>
@@ -206,7 +206,7 @@
           <div class="tl-dot green"></div>
           <div class="tl-phase green">Step 03 — Parallel Dispatch</div>
           <div class="tl-title">스레드 분배 및 병렬 수집</div>
-          <div class="tl-desc">단일 호라이즌 최대 보유 VM만 ~12,000대. 각 Horizon마다 <strong>개별 독립적인 스레드 콜</strong>을 발생시켜 동시다발적으로 API 요청, 전체 소요 시간을 1/n으로 단축시킵니다.</div>
+          <div class="tl-desc">단일 Horizon 서버당 최대 12,000대에 달하는 VM을 순차적으로 조회할 경우 극심한 병목과 지연이 발생합니다. 이를 해결하기 위해 페이징 처리처럼 데이터를 분할하고, <strong>독립적인 스레드를 할당해 API를 병렬 호출하는 방식을 적용하여 대용량 수집 지연 문제를 해결했습니다.</strong></div>
         </div>
         <div class="tl-item">
           <div class="tl-dot amber"></div>

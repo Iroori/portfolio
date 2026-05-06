@@ -198,10 +198,9 @@
 
       <div class="purpose-box">
         <div class="box-eyebrow">🎯 인프라 설계 근거</div>
-        <p>약 800명 규모 이벤트성 컨퍼런스 사이트는 트래픽 피크가 짧고 예측 가능합니다. EC2(가변 과금) 대비
-          Lightsail(4GB RAM, 80GB SSD, 월 고정 $20)은 비용 예측 가능성이 높고 네트워킹 설정이 단순합니다.
-          SQL Server 2022 Express를 동일 인스턴스에 올려 포트를 외부에 노출하지 않고
-          <code>localhost:1433</code>으로 통신해 방화벽 복잡도를 최소화했습니다.</p>
+        <p><strong>트래픽 피크가 짧고 예측 가능한 800명 규모의 이벤트성 컨퍼런스 특성을 고려하여 인프라를 설계했습니다.</strong>
+          가변 과금인 EC2 대신 <strong>월 고정 비용으로 예측 가능한 Lightsail을 도입해 운영 안정성과 비용 효율성을 높였습니다.</strong>
+          또한, 단일 인스턴스 내에 SQL Server 2022 Express를 구성하고 <strong><code>localhost:1433</code>을 통해서만 통신하도록 설정해 외부 포트 노출을 원천 차단하고 방화벽 복잡도를 최소화했습니다.</strong></p>
       </div>
 
       <div class="subsection-title">1-1. 서버 구성 스택</div>
